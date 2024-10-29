@@ -13,4 +13,4 @@ services:
       context: .                       # Contexto raíz del proyecto
       dockerfile: docker/Dockerfile.backend   # Ruta al Dockerfile de backend
     ports:
-      - "5000:5000"
+      - "5001:5000"
