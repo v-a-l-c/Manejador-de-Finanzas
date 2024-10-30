@@ -1,0 +1,7 @@
+from models.user import User
+from flas.app import app
+
+@app.route('/login', methods = ['POST'])
+def log_user:
+    return "LOgeate"
+    
