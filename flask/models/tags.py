@@ -6,4 +6,4 @@ class Tags(db.Model):
     tag_name = db.Column(db.String(10), unique=True, nullable=False)
 
     def __repr__(self):
-        return f'<Usuario {self.tag_name}>'
+        return f'<Tag {self.tag_name}>'

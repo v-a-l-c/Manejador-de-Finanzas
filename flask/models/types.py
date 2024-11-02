@@ -6,4 +6,4 @@ class Types(db.Model):
     type_name = db.Column(db.String(10), unique=True, nullable=False)
 
     def __repr__(self):
-        return f'<Usuario {self.type_name}>'
+        return f'<Type {self.type_name}>'
