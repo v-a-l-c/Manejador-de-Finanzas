@@ -4,23 +4,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.2/normalize.css"/>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <div class="login">
-        <form action="">
+        <form action="" method= "POST">
             <div class ="money-icon"><img src="@/assets/moneyBag.svg" alt="icono" class="icono"/></div>
             <h1><span>FinanceWebApp</span> Log in.</h1>
 
         <div class="input-container">
             <span class="icon"><i class="fa fa-at"></i></span>
-            <input type="text" placeholder="Email"/>
+            <input type="text" name = "username" placeholder="Email or username"/>
         </div>
 
         <div class="input-container">
             <span class="icon"><i class="fa fa-lock"></i></span>
-            <input type="password" placeholder="Password"/>
+            <input type="password" name = "password" placeholder="Password"/>
         </div>
 
         <div class="submit-row">
             <input type="submit" value="Log in &raquo;"/>
-            <span class="reset">or <a href="#">Sign up</a></span>
+            <span class="reset">or <router-link to="/SignUp.vue">Sign up</router-link></span>
         </div>
     </form>
 </div>         

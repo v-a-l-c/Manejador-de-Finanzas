@@ -4,8 +4,7 @@ WORKDIR /app
 COPY flask/requirements.txt .  
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY flask/ /app  
-ENV PYTHONPATH="/app"
+COPY flask/ .  
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
