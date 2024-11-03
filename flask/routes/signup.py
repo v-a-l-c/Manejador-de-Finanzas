@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
-from models.users import Usuarios # Importa Usuarios desde models.user
-from db_config import db  # Importa la instancia de db
+from models.users import Usuarios 
+from models import db  
 
 signup_bp = Blueprint('signup', __name__)
 

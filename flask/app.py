@@ -1,12 +1,26 @@
 from flask import Flask
-from flask_restful import Resource, Api
-from  models import db
+from models import db 
+from routes.signup import signup_bp
+from routes.signout import signout_bp
+from routes.login import login_route  
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://user:userpassword@mysql:3306/mydatabase'
+def create_app():
+    app = Flask(__name__)
+    app.secret_key = "epicomomentogamer"
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://user:userpassword@mysql/mydatabase'
+    
+    
+    db.init_app(app)
+    
+    with app.app_context():
+        db.create_all()
+    
+    app.register_blueprint(signup_bp, url_prefix='/auth')
+    app.register_blueprint(signout_bp, url_prefix='/auth')
+    app.register_blueprint(login_route, url_prefix='/auth') 
 
-# init db instance with the current app context
-db.init_app(app)
+    return app
 
 if __name__ == '__main__':
+    app = create_app()
     app.run(host='0.0.0.0', port=5000, debug=True)
