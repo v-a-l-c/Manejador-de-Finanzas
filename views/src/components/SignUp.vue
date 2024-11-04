@@ -3,28 +3,50 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <!-- Sign up -->
     <div class="Signup">
-                <h1>Sign up</h1>
                 <form method="POST">
                     <div class ="money-icon"><img src="@/assets/moneyBag.svg" alt="icono" class="icono"/></div>
                     <h1><span>FinanceWebApp</span> Sign up.</h1>
                     <div class="input-container">
-                        <span class="icon"><i class="fa fa-user"></i></span>
-                        <input type="username" required placeholder="username">
+                        <span class="icon"><i class="fa fa-at"></i></span>
+                        <input v-model="username" type="text" name = "username" placeholder="Username"/>
                     </div>
                     <div class="input-container">
                         <span class="icon"><i class="fa fa-at"></i></span>
-                        <input type="mail" required placeholder="mail">
+                        <input v-model ="mail" type="mail" required placeholder="mail">
                     </div>
                     <div class="input-container">
                         <span class="icon"><i class="fa fa-lock"></i></span>
-                        <input type="password" required placeholder="password">
+                        <input v-model ="password" type="text" name = "password" placeholder="Password"/>
                     </div>
-                    <input type="submit" class="button button-block" value="Send record &raquo;">
-                    <span class="reset"> or Sign up</span>
+                    <input @click.prevent = "signup_access" type="submit" value="Send request &raquo;"/>
+                    <div v-if = "data_json.length > 0 ">
+                        <h3>usuario: {{data_json [0]}}</h3>
+                        </div>
                 </form>
             </div>
 </template>
-<script setup></script>
+<script setup>
+/** Establish connection with the API route and post resource*/
+import axios from 'axios';
+import {ref} from 'vue';
+
+let username = ref('');
+let password = ref('');
+let mail = ref('');
+let data_json = ref([]);
+
+const signup_access = async () =>{
+    const response = await axios.post('http://172.18.0.4:5000/auth/', {
+        username: username.value,
+        mail: mail.value,
+        password: password.value
+    });
+    data_json.value = [response.data.message];
+    console.log(JSON.stringify(data_json.value));
+}
+</script>
+
+
 <style scoped>
 .money-icon{
     display: flex;
@@ -37,8 +59,8 @@ height: 60px;
 }   
 .Signup{
     margin:100px auto;
-    width:350px;
-    max-height: 500px;
+    width:400px;
+    max-height: 600px;
 }
 
 form h1{
@@ -74,7 +96,7 @@ form .icon{
     float:left;
 }
 
-form input[type="text"],form input[type="password"] {
+form input[type="text"],form input[type="password"], form input[type="mail"] {
     padding:0.8em 0.8em 0.8em 0;
     font-size:1.4em;
     color:#1b1717;

@@ -14,10 +14,10 @@ def signup():
     mail = data.get('mail')
 
     if not username or not password:
-        return jsonify({"message": "Missing username or password"}), 400
+        return jsonify({"message": "Missing username or password"})
 
     if Usuarios.query.filter_by(username=username).first() or Usuarios.query.filter_by(mail=mail).first():
-        return jsonify({"message": "User already exists"}), 409
+        return jsonify({"message": "User already exists"})
 
     new_user = Usuarios(
         username=username,
@@ -28,4 +28,4 @@ def signup():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({"message": "User created successfully"}), 201
+    return jsonify({"message": "User created successfully"})

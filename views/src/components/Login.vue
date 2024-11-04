@@ -20,7 +20,6 @@
 
         <div class="submit-row">
             <input @click.prevent = "login_access" type="submit" value="Log in &raquo;"/>
-            <span class="reset"> or Sign up</span>
         </div>
         <div v-if = "data_json.length > 0 ">
             <h3>usuario: {{data_json [1]}}</h3>
@@ -31,12 +30,12 @@
    
 </template>
 
+
 <script setup>
 
 /** Establish connection with the API route and post resource*/
 import axios from 'axios';
-import {ref} from 'vue'
-
+import {ref} from 'vue';
 let username = ref('');
 let password = ref('');
 let data_json = ref([]);

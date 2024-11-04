@@ -12,4 +12,12 @@ export default defineConfig({
   optimizeDeps: {
     include: ['axios'], // Asegúrate de incluir Axios para la optimización
   },
+  server: {
+    proxy: {
+      '/auth': {
+        target: 'http://localhost:5000', // URL de tu backend Flask
+        changeOrigin: true,
+      },
+    },
+  },
 })

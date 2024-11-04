@@ -10,15 +10,18 @@ def create_app():
     app = Flask(__name__)
     app.secret_key = "epicomomentogamer"
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://user:userpassword@mysql/mydatabase'
-    CORS(app)
+    CORS(app, resources={r"/auth/*": {"origins": "*", "methods": ["POST", "OPTIONS"], "supports_credentials": True}})
+
+
+
     db.init_app(app)
     
     with app.app_context():
         db.create_all()  # Esto creará todas las tablas, asegúrate de que los modelos estén definidos
-
+    
     app.register_blueprint(signup_bp, url_prefix='/auth')
     app.register_blueprint(signout_bp, url_prefix='/auth')
-    app.register_blueprint(login_route, url_prefix='/auth') 
+    app.register_blueprint(login_route, url_prefix='/auth')
 
     return app
 
