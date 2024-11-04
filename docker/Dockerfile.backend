@@ -14,4 +14,7 @@ ENV PYTHONPATH=/app
 
 EXPOSE 5000
 
-CMD ["flask", "run"]
+COPY wait-for-it.sh /usr/local/bin/wait-for-it
+RUN chmod +x /usr/local/bin/wait-for-it
+
+CMD [ "wait-for-it", "mysql:3306", "--","flask", "run"]
