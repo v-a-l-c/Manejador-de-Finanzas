@@ -1,4 +1,5 @@
 from . import db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class Usuarios(db.Model):
     __tablename__ = 'users'
@@ -8,11 +9,8 @@ class Usuarios(db.Model):
     authenticated = db.Column(db.Boolean, nullable=False)
     mail = db.Column(db.String(100), unique=True, nullable=False)
 
-    def get_password_hash(self):
-        return self.password_hash
-    
-    def get_username(self):
-        return self.username
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
         return f'<Usuario {self.username}>'

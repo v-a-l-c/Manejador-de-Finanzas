@@ -11,17 +11,19 @@ def signup():
 
     username = data.get('username')
     password = data.get('password')
+    mail = data.get('mail')
 
     if not username or not password:
         return jsonify({"message": "Missing username or password"}), 400
 
-    if Usuarios.query.filter_by(username=username).first():
+    if Usuarios.query.filter_by(username=username).first() or Usuarios.query.filter_by(mail=mail).first():
         return jsonify({"message": "User already exists"}), 409
 
     new_user = Usuarios(
         username=username,
         password_hash=generate_password_hash(password),
-        authenticated=False
+        authenticated=False,
+        mail = mail
     )
     db.session.add(new_user)
     db.session.commit()
