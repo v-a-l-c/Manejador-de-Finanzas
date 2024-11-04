@@ -4,23 +4,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.2/normalize.css"/>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <div class="login">
-        <form action="" method= "POST">
+        <form method= "POST">
             <div class ="money-icon"><img src="@/assets/moneyBag.svg" alt="icono" class="icono"/></div>
             <h1><span>FinanceWebApp</span> Log in.</h1>
 
         <div class="input-container">
             <span class="icon"><i class="fa fa-at"></i></span>
-            <input type="text" name = "username" placeholder="Email or username"/>
+            <input v-model="username" type="text" name = "username" placeholder="Username"/>
         </div>
 
         <div class="input-container">
             <span class="icon"><i class="fa fa-lock"></i></span>
-            <input type="password" name = "password" placeholder="Password"/>
+            <input v-model ="password" type="password" name = "password" placeholder="Password"/>
         </div>
 
         <div class="submit-row">
-            <input type="submit" value="Log in &raquo;"/>
-            <span class="reset">or <router-link to="/SignUp.vue">Sign up</router-link></span>
+            <input @click.prevent = "login_access" type="submit" value="Log in &raquo;"/>
+            <span class="reset"> or Sign up</span>
+        </div>
+        <div v-if = "data_json.length > 0 ">
+            <h3>usuario: {{data_json [1]}}</h3>
+            <h3>type: {{data_json [0]}}</h3>
         </div>
     </form>
 </div>         
@@ -29,6 +33,22 @@
 
 <script setup>
 
+/** Establish connection with the API route and post resource*/
+import axios from 'axios';
+import {ref} from 'vue'
+
+let username = ref('');
+let password = ref('');
+let data_json = ref([]);
+
+const login_access = async () =>{
+    const response = await axios.post('http://172.18.0.4:5000/auth/login', {
+        username: username.value,
+        password: password.value
+    });
+    data_json.value = [response.data.response, response.data.username];
+    console.log(JSON.stringify(data_json.value));
+}
 </script>
 
 <style scoped>

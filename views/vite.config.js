@@ -8,5 +8,8 @@ export default defineConfig({
     alias: {
       '@':path.resolve(__dirname, './src')
     }
-  }
+  },
+  optimizeDeps: {
+    include: ['axios'], // Asegúrate de incluir Axios para la optimización
+  },
 })

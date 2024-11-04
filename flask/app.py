@@ -4,12 +4,13 @@ from models.users import Usuarios  # Asegúrate de importar tu modelo de usuario
 from routes.signup import signup_bp
 from routes.signout import signout_bp
 from routes.login import login_route  
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
     app.secret_key = "epicomomentogamer"
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://user:userpassword@mysql/mydatabase'
-    
+    CORS(app)
     db.init_app(app)
     
     with app.app_context():
