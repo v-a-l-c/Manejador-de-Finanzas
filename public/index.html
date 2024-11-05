@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MonKey WebApp</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      color: #000000;
+    }
+
+    /* Fondo de degradado oscuro */
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #111, #333);
+    }
+
+    /* Estilo de la barra de navegación */
+    .navbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1em 2em;
+      background: rgba(0, 0, 0, 0.6);
+      box-shadow: 0 2px 10px #000000b6;
+      z-index: 3;
+    }
+
+    .logo {
+      font-size: 1.5em;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .navbar-right {
+      display: flex;
+      gap: 1em;
+    }
+
+    .navbar-right a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 600;
+      background: #584432;
+      padding: 0.5em 1em;
+      border-radius: 20px;
+      font-size: 0.9em;
+      transition: background 0.3s;
+    }
+
+    .navbar-right a:hover {
+      background: #584432;
+    }
+
+    /* Hero section con imágenes de fondo */
+    .hero {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .hero-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover; /* Asegura que la imagen cubra toda el área */
+      background-position: center;
+      transition: background-image 1s ease;
+      z-index: 1;
+    }
+
+    /* Contenedor del contenido principal */
+    .content-container {
+      background-color: rgba(82, 85, 89, 0.9);
+      border-radius: 10px;
+      padding: 2em;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      width: 90%;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    /* Estilos para la sección de ingreso de email */
+    .email-signup {
+      display: flex;
+      gap: 0.5em;
+      margin-top: 1.5em;
+    }
+
+    .email-signup input {
+      padding: 0.8em;
+      border: none;
+      border-radius: 5px;
+      width: 60%;
+      max-width: 250px;
+      font-size: 1em;
+    }
+
+    .email-signup button {
+      padding: 0.8em 1.5em;
+      background: #584432;
+      border: none;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background 0.3s;
+    }
+
+    .email-signup button:hover {
+      background: #584432;
+    }
+
+    /* Responsividad */
+    @media (min-width: 768px) {
+      .hero-text h1 {
+        font-size: 3em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Barra de navegación -->
+  <header>
+    <div class="navbar">
+      <span class="logo">MonKey</span>
+      <div class="navbar-right">
+        <a href="login.html" class="login-button">Iniciar Sesión</a>
+        <a href="signup.html" class="register-button">Regístrate</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main>
+    <section class="hero">
+      <div class="hero-image" id="heroImage"></div>
+      <div class="content-container">
+        <h1>¡Domine sus finanzas con las herramientas de MonKey!</h1>
+        <p>MonKey le ayuda a realizar un seguimiento y categorizar sus gastos e ingresos mensuales, al tiempo que ofrece información con un informe de saldo automatizado por correo electrónico.</p>
+        <div class="email-signup">
+          <input type="email" placeholder="Tu correo electrónico" id="emailInput">
+          <button onclick="window.location.href='signup.html'">Comenzar</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const heroImage = document.getElementById("heroImage");
+    const images = [
+      "assets/Portada/FotoPortada1.jpg",
+      "assets/Portada/FotoPortada2.jpg",
+      "assets/Portada/FotoPortada3.jpg"
+    ];
+    let currentIndex = 0;
+
+    function changeBackgroundImage() {
+      heroImage.style.backgroundImage = `url(${images[currentIndex]})`;
+      currentIndex = (currentIndex + 1) % images.length;
+    }
+
+    setInterval(changeBackgroundImage, 5000); // Cambia cada 5 segundos
+    changeBackgroundImage(); // Cambia la imagen al cargar la página
+  
+      // Función para guardar el correo en localStorage y redirigir a la página de registro
+      function saveEmailAndRedirect() {
+      const emailInput = document.getElementById("emailInput").value;
+      if (emailInput) {
+        // Guarda el correo en localStorage
+        localStorage.setItem("email", emailInput);
+        // Redirige a signup.html
+        window.location.href = "signup.html";
+      } else {
+        alert("Por favor, ingresa un correo electrónico válido.");
+      }
+    }
+  
+  </script>
+
+
+</body>
+</html>
