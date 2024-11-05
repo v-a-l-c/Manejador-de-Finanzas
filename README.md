@@ -32,6 +32,7 @@ COPY public/ /app
 
 EXPOSE 8080
 CMD ["http-server", "/app"]
+```
 
 El frontend será una interfaz web simple que consumirá del API del backend usando JS. No se usará frameworks como React o Vue, pero sí de componentes reutilizables con JS puro.
 
