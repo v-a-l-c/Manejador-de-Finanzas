@@ -87,6 +87,7 @@ Cómo se vio, el manejo de la parte visual del proyecto quedará en `public`.
 
 ## Estructura inicial de la carpeta `public` para el FrontEnd
 
+Esta configuración está sujetas a cambios en caso de ser necesario
 
 ```
 public
@@ -115,5 +116,10 @@ public
 
 ##  Detalles del Front
 
+### Nombre de la WebApp
+**MonKey**, La razón del nombre deriva de sobreponer la palabra *Money* y *Key*, siendo que la aplicación busca ser clave con el manejo del dinero, de ahí el nombre
+
 ### Paleta de Colores 
 #181C26, #525559, #F2F2F2, #261201 y #A67951
+
+
