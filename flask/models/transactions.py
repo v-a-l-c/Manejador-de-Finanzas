@@ -1,4 +1,6 @@
 from . import db
+from sqlalchemy.orm import relationship
+from .tag_associations import transaction_tag
 
 class Transactions(db.Model):
     __tablename__ = 'transactions'
@@ -9,6 +11,7 @@ class Transactions(db.Model):
     amount = db.Column(db.Numeric(10, 2), nullable=False)
     description = db.Column(db.Text)
     date = db.Column(db.Date, nullable=False)
+    tags = relationship('Tag', secondary=transaction_tag, back_populates='registros')
 
     def __repr__(self):
         return f'<Transacción {self.description}>'
