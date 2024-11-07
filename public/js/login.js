@@ -22,7 +22,8 @@ document.getElementById("login-form").addEventListener("submit", async (event) =
         if (response.ok && result.response === "success") {
             responseMessage.textContent = "Inicio de sesión exitoso";
             responseMessage.style.color = "green";
-            // Redirecciona o realiza otra acción tras el inicio exitoso
+            // Redirecciona al dashboard, anteriormente solo daba el mensaje
+            window.location.href = "/dashboard.html";
         } else if (result.response === "no_user_found") {
             responseMessage.textContent = "Usuario no encontrado";
             responseMessage.style.color = "red";

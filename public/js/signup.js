@@ -24,6 +24,8 @@ document.getElementById("signup-form").addEventListener("submit", async (event) 
         if (response.ok) {
             responseMessage.textContent = "Usuario registrado exitosamente";
             responseMessage.style.color = "green";
+            // Redirecciona al dashboard, antes solo el mensaje
+            window.location.href = "/dashboard.html";
         } else {
             responseMessage.textContent = result.message || "Error en el registro";
             responseMessage.style.color = "red";
