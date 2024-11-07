@@ -1,0 +1,90 @@
+/* Colores de la paleta */
+:root {
+    --color-dark: #181C26;
+    --color-medium: #525559;
+    --color-light: #F2F2F2;
+    --color-accent: #A67951;
+    --color-secondary: #261201;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: var(--color-light);
+    background-color: var(--color-dark);
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    background-color: var(--color-dark);
+    color: var(--color-light);
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.sidebar h1 {
+    font-size: 1.5em;
+    margin-bottom: 2em;
+    color: var(--color-light);
+}
+
+.sidebar nav ul {
+    list-style: none;
+}
+
+.sidebar nav ul li {
+    margin-bottom: 1.5em;
+}
+
+.sidebar nav ul li a {
+    text-decoration: none;
+    color: var(--color-light);
+    font-size: 1.2em;
+    transition: color 0.3s ease;
+}
+
+.sidebar nav ul li a:hover {
+    color: var(--color-accent);
+}
+
+.settings {
+    text-decoration: none;
+    color: var(--color-light);
+    font-size: 1em;
+    padding: 10px;
+    border: 2px solid var(--color-light);
+    border-radius: 5px;
+    text-align: center;
+    display: block;
+    margin-top: auto;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.settings:hover {
+    background-color: var(--color-light);
+    color: var(--color-dark);
+}
+
+.main-content {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: var(--color-light);
+    background-color: transparent;
+}
+

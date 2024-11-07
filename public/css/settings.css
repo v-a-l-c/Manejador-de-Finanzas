@@ -1,0 +1,77 @@
+body {
+    background-color: #181C26; /* Color oscuro para el fondo */
+    color: #F2F2F2; /* Texto claro */
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  #settings-container {
+    width: 80%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #user-data {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+  
+  /* Contenedores para las secciones de cambio */
+  #change-sections {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+  
+  /* Estilos para cada cuadro de cambio */
+  .change-box {
+    background-color: #525559;
+    padding: 20px;
+    border: 1px solid #A67951;
+    border-radius: 8px;
+    width: 30%;
+    text-align: center;
+  }
+  
+  .change-box h3 {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+  }
+  
+  .change-box input[type="text"],
+  .change-box input[type="password"] {
+    width: 90%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #A67951;
+    border-radius: 5px;
+    background-color: #261201;
+    color: #F2F2F2;
+  }
+  
+  .change-box button {
+    background-color: #A67951;
+    border: none;
+    padding: 10px;
+    width: 50%;
+    color: #F2F2F2;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .change-box button:hover {
+    background-color: #F2F2F2;
+    color: #A67951;
+  }
+  
