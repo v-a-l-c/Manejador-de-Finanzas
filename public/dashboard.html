@@ -1,4 +1,3 @@
-<!--dashboard.html-->>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,6 +8,7 @@
 </head>
 <body>
     <div class="container">
+        <!-- Sidebar -->
         <div class="sidebar">
             <h1>MonKey</h1>
             <nav>
@@ -22,12 +22,19 @@
             <a href="settings.html" class="settings">Configuración</a>
         </div>
         
+        <!-- Contenido P -->
         <div class="main-content">
+            <!-- Left-aligned: Dashboard Title -->
             <h1 class="dashboard-title">Dashboard</h1>
+
+            <!-- Botón: Cerrar Sesión -->
             <a href="logout.html" class="logout">Cerrar sesión</a>
+
+            <!-- Caja centrada -->
             <div class="content-box">
                 <h2 class="summary-title">Resumen General</h2>
                 <div class="content">
+                    <!-- Botones juntos -->
                     <button onclick="location.href='balance.html'" class="card-button">
                         <h2>Saldo</h2>
                         <p>$ 1,000.00</p>
@@ -48,6 +55,5 @@
             </div>
         </div>
     </div>
-    <script src="script.js"></script>
 </body>
 </html>
