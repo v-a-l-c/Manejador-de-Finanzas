@@ -20,21 +20,7 @@ El proyecto fue contemplado inicialmente en Vue, sin embargo, por distintas difi
 
 ### Estructura del Proyecto
 
-La reestructura comienza en el archivo `Dockerfile.frontend` con el siguiente código:
-
-```dockerfile
-FROM node:lts-alpine
-
-RUN npm install -g http-server
-
-WORKDIR /app
-COPY public/ /app
-
-EXPOSE 8080
-CMD ["http-server", "/app"]
-```
-
-El frontend será una interfaz web simple que consumirá del API del backend usando JS. No se usará frameworks como React o Vue, pero sí de componentes reutilizables con JS puro.
+La reestructura comienza en la eliminicación del archivo `Dockerfile.frontend` . El frontend será una interfaz web simple que consumirá del API del backend usando JS. No se usará frameworks como React o Vue, pero sí de componentes reutilizables con JS puro.
 
 La estructura de páginas es de la siguiente forma:
 
