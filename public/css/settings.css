@@ -1,6 +1,6 @@
 /* General */
 body {
-  background: url('/workspaces/Manejador-de-Finanzas/public/assets/fondoSettings/FondoSettings.jpg') no-repeat center center fixed;
+  background: url('public/assets/fondoSettings/FondoSettings.jpg') no-repeat center center fixed;
   background-size: cover;
   color: #F2F2F2;
   font-family: Arial, sans-serif;
