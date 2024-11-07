@@ -20,7 +20,9 @@ El proyecto fue contemplado inicialmente en Vue, sin embargo, por distintas difi
 
 ### Estructura del Proyecto
 
+
 La reestructura comienza la eliminación del archivo `Dockerfile.frontend` . El frontend será una interfaz web simple que consumirá del API del backend usando JS. No se usará frameworks como React o Vue, pero sí de componentes reutilizables con JS puro.
+
 
 La estructura de páginas es de la siguiente forma:
 
