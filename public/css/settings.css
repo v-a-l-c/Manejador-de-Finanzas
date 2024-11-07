@@ -1,77 +1,132 @@
+/* General */
 body {
-    background-color: #181C26; /* Color oscuro para el fondo */
-    color: #F2F2F2; /* Texto claro */
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
-  
-  #settings-container {
-    width: 80%;
-    max-width: 1000px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  #user-data {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  h1 {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
-  
-  /* Contenedores para las secciones de cambio */
-  #change-sections {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-  }
-  
-  /* Estilos para cada cuadro de cambio */
-  .change-box {
-    background-color: #525559;
-    padding: 20px;
-    border: 1px solid #A67951;
-    border-radius: 8px;
-    width: 30%;
-    text-align: center;
-  }
-  
-  .change-box h3 {
-    font-size: 1.2em;
-    margin-bottom: 15px;
-  }
-  
-  .change-box input[type="text"],
-  .change-box input[type="password"] {
-    width: 90%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #A67951;
-    border-radius: 5px;
-    background-color: #261201;
-    color: #F2F2F2;
-  }
-  
-  .change-box button {
-    background-color: #A67951;
-    border: none;
-    padding: 10px;
-    width: 50%;
-    color: #F2F2F2;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .change-box button:hover {
-    background-color: #F2F2F2;
-    color: #A67951;
-  }
-  
+  background: url('/workspaces/Manejador-de-Finanzas/public/assets/fondoSettings/FondoSettings.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #F2F2F2;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Barra superior */
+.top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(82, 85, 89, 0.9); /* Barra semi-transparente */
+  color: #F2F2F2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  box-sizing: border-box;
+}
+
+.top-bar .title {
+  font-size: 1.5em;
+  margin: 0;
+  text-align: center;
+  flex-grow: 1;
+  color: #F2F2F2;
+}
+
+/* Botones de la barra superior */
+.back-button, .logout-button {
+  background-color: #A67951;
+  color: #F2F2F2;
+  border: 1px solid #A67951;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-size: 1em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.back-button:hover, .logout-button:hover {
+  background-color: #F2F2F2;
+  color: #A67951;
+}
+
+/* Contenedor principal */
+.container {
+  display: flex;
+  width: 80%;
+  max-width: 1000px;
+  justify-content: space-between;
+  padding-top: 60px;
+  box-sizing: border-box;
+}
+
+/* Sección de datos de usuario */
+.user-info {
+  width: 20%;
+  background-color: rgba(82, 85, 89, 0.9); /* Fondo semi-transparente */
+  padding: 20px;
+  border: 1px solid #A67951;
+  border-radius: 8px;
+  color: #F2F2F2;
+  text-align: left;
+}
+
+/* Sección de cambio en escalera */
+.change-sections {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  padding-left: 20px;
+}
+
+.change-section {
+  background-color: rgba(82, 85, 89, 0.9); /* Fondo semi-transparente */
+  padding: 20px;
+  border: 1px solid #A67951;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #F2F2F2;
+  position: relative;
+}
+
+.change-username { margin-left: 0; }
+.change-email { margin-left: 20px; }
+.change-password { margin-left: 40px; }
+
+.change-section h3 {
+  margin-top: 0;
+  font-size: 1.2em;
+}
+
+.change-section input[type="text"],
+.change-section input[type="email"],
+.change-section input[type="password"] {
+  width: 90%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #A67951;
+  border-radius: 5px;
+  background-color: #261201;
+  color: #F2F2F2;
+}
+
+.change-section button {
+  background-color: #A67951;
+  border: none;
+  padding: 10px;
+  width: 50%;
+  color: #F2F2F2;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.change-section button:hover {
+  background-color: #F2F2F2;
+  color: #A67951;
+}
+

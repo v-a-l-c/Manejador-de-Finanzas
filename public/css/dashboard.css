@@ -1,4 +1,4 @@
-/* Colores de la paleta */
+/* Color Palette */
 :root {
     --color-dark: #181C26;
     --color-medium: #525559;
@@ -84,7 +84,107 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    background-color: var(--color-secondary);
     color: var(--color-light);
-    background-color: transparent;
+}
+
+/* Left-aligned Dashboard Title */
+.dashboard-title {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1.5em;
+    color: var(--color-light);
+}
+
+/* Cerrar Sesión in Top Right Corner */
+.logout {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1em;
+    color: var(--color-light);
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 2px solid var(--color-light);
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.logout:hover {
+    background-color: var(--color-light);
+    color: var(--color-dark);
+}
+
+/* Content Box Styling */
+.content-box {
+    width: 60%;
+    padding: 20px;
+    background-color: rgba(24, 28, 38, 0.9); /* Semi-transparent background */
+    border-radius: 8px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 80px;
+}
+
+/* Summary Title Styling */
+.summary-title {
+    color: var(--color-accent);
+    font-size: 2em;
+    font-weight: bold;
+    align-self: flex-start;
+    margin-top: 10px;
+}
+
+/* Stacked Button Layout */
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    align-items: center;
+}
+
+.card-button {
+    background-color: var(--color-medium);
+    border: none;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 100%;
+    color: var(--color-light);
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 1.2em;
+}
+
+.card-button h2 {
+    margin-bottom: 10px;
+    color: var(--color-accent);
+}
+
+.card-button p {
+    font-size: 1.5em;
+    margin-top: 5px;
+}
+
+.card-button:hover {
+    background-color: var(--color-light);
+    color: var(--color-dark);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content-box {
+        width: 80%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sidebar {
+        width: 30%;
+    }
 }
 

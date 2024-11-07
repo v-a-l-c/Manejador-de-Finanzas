@@ -1,20 +1,20 @@
-<!--settings.html-->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><marquee>Configuración</marquee></title>
+    <title>Configuración</title>
     <link rel="stylesheet" href="settings.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">Configuración</h1>
-        
-        <!-- Botón Volver -->
+    <!-- Barra superior de navegación -->
+    <div class="top-bar">
         <button onclick="window.history.back()" class="back-button">Volver</button>
+        <h1 class="title">Configuración</h1>
+        <a href="logout.html" class="logout-button">Cerrar sesión</a>
+    </div>
 
-
+    <div class="container">
         <!-- Datos del Usuario -->
         <div class="user-info">
             <h2>Datos del Usuario</h2>
@@ -22,38 +22,35 @@
             <p>Correo E: <span id="current-email">CORREOEJEMPLO</span></p>
         </div>
 
-        <!-- Cambiar nombre de usuario -->
-        <div class="change-section">
-            <h3>Cambiar nombre de usuario</h3>
-            <form id="update-user-form">
-                <input type="text" id="new-username" placeholder="Nuevo usuario">
-                <input type="text" id="confirm-username" placeholder="Confirmar usuario">
-                <button type="submit">Aceptar</button>
-            </form>
-        </div>
+        <!-- Sección de cambio en escalera -->
+        <div class="change-sections">
+            <div class="change-section change-username">
+                <h3>Cambiar nombre de usuario</h3>
+                <form id="update-user-form">
+                    <input type="text" id="new-username" placeholder="Nuevo usuario" required>
+                    <input type="text" id="confirm-username" placeholder="Confirmar usuario" required>
+                    <button type="submit">Aceptar</button>
+                </form>
+            </div>
 
-        <!-- Cambiar correo -->
-        <div class="change-section">
-            <h3>Cambiar correo</h3>
-            <form id="update-email-form">
-                <input type="email" id="new-email" placeholder="Nuevo correo">
-                <input type="email" id="confirm-email" placeholder="Confirmar correo">
-                <button type="submit">Aceptar</button>
-            </form>
-        </div>
+            <div class="change-section change-email">
+                <h3>Cambiar correo</h3>
+                <form id="update-email-form">
+                    <input type="email" id="new-email" placeholder="Nuevo correo" required>
+                    <input type="email" id="confirm-email" placeholder="Confirmar correo" required>
+                    <button type="submit">Aceptar</button>
+                </form>
+            </div>
 
-        <!-- Cambiar contraseña -->
-        <div class="change-section">
-            <h3>Cambiar contraseña</h3>
-            <form id="update-password-form">
-                <input type="password" id="new-password" placeholder="Nueva contraseña">
-                <input type="password" id="confirm-password" placeholder="Confirmar contraseña">
-                <button type="submit">Aceptar</button>
-            </form>
+            <div class="change-section change-password">
+                <h3>Cambiar contraseña</h3>
+                <form id="update-password-form">
+                    <input type="password" id="new-password" placeholder="Nueva contraseña" required>
+                    <input type="password" id="confirm-password" placeholder="Confirmar contraseña" required>
+                    <button type="submit">Aceptar</button>
+                </form>
+            </div>
         </div>
-
-        <!-- Botón Cerrar Sesión -->
-        <a href="logout.html" class="logout-button">Cerrar sesión</a>
     </div>
 
     <script src="settings.js"></script>
