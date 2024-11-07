@@ -9,15 +9,16 @@ document.getElementById("signup-form").addEventListener("submit", async (event) 
     };
 
     try {
-        const response = await fetch("http://backend:5000/auth/", {  // URL actualizada
+        const response = await fetch("http://172.19.0.4:5000/auth/", {  // URL actualizada
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
         });
-
+        console.log(response);
         const result = await response.json();
+        console.log(result);
 
         const responseMessage = document.getElementById("signup-response");
         if (response.ok) {

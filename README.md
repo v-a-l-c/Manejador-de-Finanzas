@@ -20,20 +20,9 @@ El proyecto fue contemplado inicialmente en Vue, sin embargo, por distintas difi
 
 ### Estructura del Proyecto
 
-La reestructura comienza en el archivo `Dockerfile.frontend` con el siguiente código:
 
-```dockerfile
-FROM node:lts-alpine
+La reestructura comienza la eliminación del archivo `Dockerfile.frontend` . El frontend será una interfaz web simple que consumirá del API del backend usando JS. No se usará frameworks como React o Vue, pero sí de componentes reutilizables con JS puro.
 
-RUN npm install -g http-server
-
-WORKDIR /app
-COPY public/ /app
-
-EXPOSE 8080
-CMD ["http-server", "/app"]
-
-El frontend será una interfaz web simple que consumirá del API del backend usando JS. No se usará frameworks como React o Vue, pero sí de componentes reutilizables con JS puro.
 
 La estructura de páginas es de la siguiente forma:
 
@@ -86,6 +75,7 @@ Cómo se vio, el manejo de la parte visual del proyecto quedará en `public`.
 
 ## Estructura inicial de la carpeta `public` para el FrontEnd
 
+Esta configuración está sujetas a cambios en caso de ser necesario
 
 ```
 public
@@ -114,5 +104,10 @@ public
 
 ##  Detalles del Front
 
+### Nombre de la WebApp
+**MonKey**, La razón del nombre deriva de sobreponer la palabra *Money* y *Key*, siendo que la aplicación busca ser clave con el manejo del dinero, de ahí el nombre
+
 ### Paleta de Colores 
 #181C26, #525559, #F2F2F2, #261201 y #A67951
+
+
