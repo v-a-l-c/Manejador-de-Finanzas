@@ -1,7 +1,6 @@
-from flask import request, Blueprint, jsonify
+from flask import request, Blueprint, jsonify, session
 from models.users import Usuarios
-import hashlib
-
+from models import db
 
 login_route = Blueprint('login_route', __name__)
 
@@ -9,18 +8,19 @@ login_route = Blueprint('login_route', __name__)
 @login_route.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':
-        try:
+        user = session.get("user_id")
+        data_json = request.get_json()
+        password = data_json.get('password')
+        current_username = data_json.get('username')
+        user = db.session.execute(db.select(Usuarios).filter_by(username = current_username)).scalar_one_or_none()
 
-            current_username = request.form["username"]
-            currrent_password = request.form["password"]
-            password_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
-            user = db.session.execute(db.select(users).filter_by(username = current_username)).first_or_404()
+        if not user: 
+            return jsonify({"username": current_username, "response": "no_user_found"}), 400
 
-            if user.get_password_hash() == password_hash:
-                #define a ok hash password through database
-                return jsonify({'username': user.get_username(), 'message': "success"})
+        elif user.check_password(password):
+            return jsonify({"username": current_username, "response": "success"}), 201
 
-        except Exception as error:
-            return jsonify({'response': "error_find_query"})
-    else:
-        return jsonify({'response': "NO_POST_METHOD"})
+        else:
+            return jsonify({"username": current_username, "response": "no_access", "description": "invalid password"})
+
+    return jsonify({'response': "NO_POST_METHOD"})

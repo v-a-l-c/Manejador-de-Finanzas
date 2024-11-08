@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MonKey - Dashboard</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h1>MonKey</h1>
+            <nav>
+                <ul>
+                    <li><a href="history.html">Historial</a></li>
+                    <li><a href="income.html">Ingresos</a></li>
+                    <li><a href="transaction.html">Transacciones</a></li>
+                    <li><a href="debts.html">Deudas</a></li>
+                </ul>
+            </nav>
+            <a href="settings.html" class="settings">Configuración</a>
+        </div>
+        
+        <!-- Contenido P -->
+        <div class="main-content">
+            <!-- Left-aligned: Dashboard Title -->
+            <h1 class="dashboard-title">Dashboard</h1>
+
+            <!-- Botón: Cerrar Sesión -->
+            <a href="index.html" class="logout">Cerrar sesión</a>
+
+            <!-- Caja centrada -->
+            <div class="content-box">
+                <h2 class="summary-title">Resumen General</h2>
+                <div class="content">
+                    <!-- Botones juntos -->
+                    <button onclick="location.href='balance.html'" class="card-button">
+                        <h2>Saldo</h2>
+                        <p>$ 1,000.00</p>
+                    </button>
+                    <button onclick="location.href='income.html'" class="card-button">
+                        <h2>Ingresos</h2>
+                        <p>$ 1,000.00</p>
+                    </button>
+                    <button onclick="location.href='transaction.html'" class="card-button">
+                        <h2>Transacciones</h2>
+                        <p>10</p>
+                    </button>
+                    <button onclick="location.href='debts.html'" class="card-button">
+                        <h2>Deudas</h2>
+                        <p>5</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
