@@ -5,9 +5,13 @@ from models import db
 
 signup_bp = Blueprint('signup', __name__)
 
-@signup_bp.route('/', methods=['POST'])  # La ruta ahora es relativa
+@signup_bp.route('/', methods=['POST'])
 def signup():
-    data = request.get_json()
+    try:
+        data = request.get_json()
+
+    except Exception as e:
+        return jsonify({"message": "Server error", "error": str(e)}), 500
 
     username = data.get('username')
     password = data.get('password')
@@ -23,8 +27,13 @@ def signup():
         username=username,
         password_hash=generate_password_hash(password),
         authenticated=False,
-        mail = mail
+        mail=mail,
+        firstName=data.get('firstName', ''),  # vacios de primerassss
+        secondNames=data.get('secondNames', ''),
+        curp=data.get('curp', ''),
+        rfc=data.get('rfc', '')
     )
+
     db.session.add(new_user)
     db.session.commit()
 

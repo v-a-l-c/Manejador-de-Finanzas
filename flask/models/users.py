@@ -10,10 +10,10 @@ class Usuarios(db.Model):
     mail = db.Column(db.String(100), unique=True, nullable=False)
 
     #Modificables por el usuario:
-    firstName = db.Column(db.String(50), nullable=False)
-    secondNames = db.Column(db.String(70))
-    curp = db.Column(db.String(18))
-    rfc = db.Column(db.String(13))
+    firstName = db.Column(db.String(50), nullable=True)
+    secondNames = db.Column(db.String(70), nullable=True)
+    curp = db.Column(db.String(18), nullable=True)
+    rfc = db.Column(db.String(13), nullable=True)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
