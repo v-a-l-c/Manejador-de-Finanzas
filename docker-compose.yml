@@ -29,6 +29,17 @@ services:
     networks:
       - app-network
 
+  js-server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.http
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
 networks:
   app-network:
     driver: bridge
