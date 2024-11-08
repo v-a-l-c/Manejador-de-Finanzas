@@ -12,10 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (newUsername === confirmUsername) {
             try {
                 const response = await fetch("http://172.19.0.3:5000/auth/update_username", {
-                    method: "PUT",
+                    method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ username: newUsername }),
-                    credentials: 'include'
                 });
 
                 if (response.ok) alert("Nombre de usuario actualizado");
@@ -37,11 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (newEmail === confirmEmail) {
             try {
-                const response = await fetch("http://172.19.0.3:5000/auth/update_mail", {
-                    method: "PUT",
+                const response = await fetch("/auth/update_email", {
+                    method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ mail: newEmail }),
-                    credentials: 'include'
+                    body: JSON.stringify({ email: newEmail }),
                 });
 
                 if (response.ok) alert("Correo actualizado");
@@ -63,11 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (newPassword === confirmPassword) {
             try {
-                const response = await fetch("http://172.19.0.3:5000/auth/update_password", {
-                    method: "PUT",
+                const response = await fetch("/auth/update_password", {
+                    method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ password: newPassword }),
-                    credentials: 'include'
                 });
 
                 if (response.ok) alert("Contraseña actualizada");
