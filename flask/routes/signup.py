@@ -19,10 +19,10 @@ def signup():
     mail = data.get('mail')
 
     if not username or not password:
-        return jsonify({"message": "Missing username or password"})
+        return jsonify({"message": "Missing username or password"}), 400
 
     if Usuarios.query.filter_by(username=username).first() or Usuarios.query.filter_by(mail=mail).first():
-        return jsonify({"message": "User already exists"})
+        return jsonify({"message": "User already exists"}), 400
 
     new_user = Usuarios(
         username=username,
