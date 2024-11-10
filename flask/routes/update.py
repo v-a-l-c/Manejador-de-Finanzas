@@ -52,3 +52,46 @@ def update_password():
         return({"message": "success_update_password"}), 201
     
     return jsonify({"error": "no_user_found "}), 400
+
+def is_rfc_correct(rfc):
+    clear_rfc = rfc.strip()
+    verify_upper = ""
+    if len(clear_rfc) != 13:
+        return False
+    for index  in range(0, 4):
+        verify_upper = clear_rfc[index]
+    if  not verify_upper.isupper():
+        return False
+    return True
+
+
+@update.route('/update_rfc', methods=['PUT'])
+def update_rfc():
+    data = request.get_json()
+    rfc = data.get('RFC')
+    user_id = current_session.get('user_id')
+    user = Usuarios.query.get(user_id)
+    if user and is_rfc_correct(rfc):
+        user.set_rfc(rfc)
+        db.session.commit()
+        return jsonify({"message" : "rfc_uploaded"}), 201
+    return jsonify({"msessage": "invalid_rfc_no_saved"}), 401
+
+def is_curp_correct(curp):
+    curp = curp.strip()
+    if len(curp) != 18:
+        return False
+    return True
+    
+
+@update.route('/update_curp', methods=['PUT'])
+def update_curp():
+    data = request.get_json()
+    curp = data.get('CURP')
+    user_id = current_session.get('user_id')
+    user = Usurarios.query.get()
+    if is_curp_correct(curp):
+        user.set_curp(curp)
+        db.session.commit()
+        return jsonify({"message" : "curp_uploaded"}), 201
+    return jsonify({"message": "invalid_curp_no_saved"}), 401

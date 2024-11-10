@@ -1,5 +1,4 @@
 from flask import Flask, send_from_directory, request, jsonify
-from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import db
@@ -9,9 +8,6 @@ from models.users import Usuarios
 def create_app():
     app = Flask(__name__, static_folder='public', static_url_path='')
     app.secret_key = "epicomomentogamer"
-    app.config["SESSION_PERMANENT"] = False
-    app.config["SESSION_TYPE"] = "filesystem"
-    Session(app)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://user:userpassword@mysql/mydatabase'
     CORS(app, resources={r"/auth/*": {"origins": "*", "methods": ["POST", "OPTIONS", "PUT"], "supports_credentials": True}})
     db.init_app(app)

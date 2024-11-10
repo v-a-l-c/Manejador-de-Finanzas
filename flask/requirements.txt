@@ -2,5 +2,3 @@ flask
 flask-cors
 Flask-SQLAlchemy
 pymysql
-flask-restful
-flask_session

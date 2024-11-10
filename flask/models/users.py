@@ -29,6 +29,12 @@ class Usuarios(db.Model):
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
+    
+    def set_rfc(self, rfc):
+        self.rfc = rfc
+        
+    def set_curp(self, curp):
+        self.curp = curp
 
     def __repr__(self):
         return f'<Usuario {self.username}>'

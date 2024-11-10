@@ -24,4 +24,4 @@ def login():
         else:
             return jsonify({"username": current_username, "response": "no_access", "description": "invalid password"})
 
-    return jsonify({'response': "NO_POST_METHOD"})
+    return jsonify({'response': "NO_POST_METHOD"}), 404
