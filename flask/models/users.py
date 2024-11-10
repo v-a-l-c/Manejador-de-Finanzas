@@ -35,6 +35,12 @@ class Usuarios(db.Model):
         
     def set_curp(self, curp):
         self.curp = curp
+    
+    def set_first_name(self, firstName):
+        self.firstName = firstName
+    
+    def set_second_names(self, secondNames):
+        self.secondNames = secondNames
 
     def __repr__(self):
         return f'<Usuario {self.username}>'

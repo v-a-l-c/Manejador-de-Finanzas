@@ -89,9 +89,35 @@ def update_curp():
     data = request.get_json()
     curp = data.get('CURP')
     user_id = current_session.get('user_id')
-    user = Usurarios.query.get()
+    user = Usurarios.query.get(user_id)
     if is_curp_correct(curp):
         user.set_curp(curp)
         db.session.commit()
         return jsonify({"message" : "curp_uploaded"}), 201
     return jsonify({"message": "invalid_curp_no_saved"}), 401
+
+@update.route('/update_name', methods=['PUT'])
+def update_name():
+    data = request.get_json()
+    name = data.get('name')
+    user_id = current_session.get('user_id')
+    user = Usuarios.query.get(user_id)
+    if user:
+        user.set_first_name(name)
+        db.session.commit()
+        return jsonify({"message": "name_uploaded"}), 201
+        
+    return jsonify({"message": "invalid_name_no_saved"}), 401
+
+@update.route('/update_last_name', methods=['PUT'])
+def update_last_name():
+    data =request.get_json()
+    last_names = data.get('last_names')
+    user_id = current_session.get('user_id')
+    user = Usuarios.query.get(user_id)
+    if user:
+        user.set_second_names(last_names)
+        db.session.commit()
+        return jsonify({"message":"last_names_uploaded"}), 201
+
+    return jsonify({"message": "invalid_last_name_no_saved"}), 401
