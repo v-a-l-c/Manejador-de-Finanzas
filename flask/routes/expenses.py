@@ -13,6 +13,8 @@ def addExpense():
     except Exception as e:
         return jsonify({"message": "Server error", "error": str(e)}), 500
 
+    if not data or 'amount' not in data or 'description' not in data or 'date' not in data:
+        return jsonify({"message": "Missing required fields"}), 400
     amount = data.get('amount')
     description = data.get('description')
     date = data.get('date')
@@ -25,6 +27,10 @@ def addExpense():
         date=date
     )
 
-    db.session.add(new_expense)
-    db.session.commit()
-    return jsonify({"response": "Expense_added_successfully"}), 201
+    try:
+        db.session.add(new_expense)
+        db.session.commit()
+        return jsonify({"response": "Expense_added_successfully"}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": "Database error", "error": str(e)}), 500
