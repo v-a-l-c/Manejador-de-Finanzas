@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import db
 from models.users import Usuarios
+from models.types import initialize_types
 
 
 def create_app():
@@ -22,6 +23,7 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+        initialize_types()
 
     app.register_blueprint(update, url_prefix='/auth')
     app.register_blueprint(signup_bp, url_prefix='/auth')
