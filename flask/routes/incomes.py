@@ -14,7 +14,7 @@ def register_income():
 
         data_json = request.get_json()
         user_id = current_session.get('user_id')
-        current_wallet = Wallet(1)
+        current_wallet = Wallet(user_id)
         current_wallet.insert_amount(data_json.get('amount'), data_json.get('description'), data_json.get('date'))
         return jsonify({"messege": "income_saved_successfully", "response": "success"}), 201
 
@@ -29,7 +29,7 @@ def get_amount_per_day():
     try:
         data_json = request.get_json()
         user_id = current_session.get('user_id')
-        current_wallet = Wallet(1)
+        current_wallet = Wallet(user_id)
         return jsonify({"message": "income_per_day_returned", "resource" : current_wallet.get_amount_per_day(data_json['date'])}), 201
 
     except Exception as e:
@@ -40,7 +40,7 @@ def get_amount_per_month():
     try: 
         data_json = request.get_json()
         user_id = current_session.get('user_id')
-        current_wallet = Wallet(1)
+        current_wallet = Wallet(user_id)
         return jsonify({"message": "income_per_month_returned", "resource": current_wallet.get_amount_per_month(data_json['date'])}), 201
     except Exception as e:
         return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
@@ -50,7 +50,7 @@ def get_amount_per_year():
     try:
         data_json = request.get_json()
         user_id = current_session.get('user_id')
-        current_wallet= Wallet(1)
+        current_wallet= Wallet(user_id)
         return jsonify({"message": "income_per_year_returned", "resource": current_wallet.get_amount_per_year(data_json['date'])}), 201
     except Exception as e:
         return jsonify({"message": "server_not_process_data", "response" : str(e)}), 500

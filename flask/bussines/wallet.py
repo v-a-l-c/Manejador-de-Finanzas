@@ -24,7 +24,6 @@ class Wallet:
         db.session.add(new_transaction)
         db.session.commit()
     
-    
     def get_amount_per_day(self, date):
         show_data = {}
 
@@ -32,11 +31,13 @@ class Wallet:
         .filter(Usuarios.id == self.user_id)
         .filter(Transactions.date == date))
 
-        cont = 0
+        cont = 1
+        total = 0
         for row in current_amount:
             show_data[cont] = {"amount": row.amount, "description": row.description, "date": row.date}
             cont += 1
-
+            total += float(row.amount)
+        show_data[0] = {"total": str(total)}
         return show_data
     
     
@@ -46,10 +47,13 @@ class Wallet:
         current_amount = db.session.execute(db.select(Usuarios, Transactions.amount, Transactions.description, Transactions.date)
         .filter(Usuarios.id == self.user_id)
         .filter(func.month(Transactions.date) == func.month(date)))
-        cont = 0;
+        cont = 1
+        total = 0
         for row in current_amount:
             show_data[cont] = {"amount": row.amount, "description": row.description, "date": row.date}
             cont += 1
+            total += float(row.amount)
+        show_data[0] = {"total": str(total)}
         return show_data
     
     def get_amount_per_year(self, date):
@@ -57,10 +61,13 @@ class Wallet:
         current_amount = db.session.execute(db.select(Usuarios, Transactions.amount, Transactions.description, Transactions.date)
         .filter(Usuarios.id == self.user_id)
         .filter(func.year(Transactions.date) == func.year(date)))
-        cont = 0
+        cont = 1
+        total = 0
         for row in current_amount:
             show_data[cont] = {"amount": row.amount, "description": row.description, "date": row.date}
             cont += 1
+            total += float(row.amount)
+        show_data[0] = {"total": str(total)}
         return show_data
 
         
