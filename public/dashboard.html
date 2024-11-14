@@ -8,7 +8,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Sidebar -->
         <div class="sidebar">
             <h1>MonKey</h1>
             <nav>
@@ -22,19 +21,14 @@
             <a href="settings.html" class="settings">Configuración</a>
         </div>
         
-        <!-- Contenido P -->
         <div class="main-content">
-            <!-- Left-aligned: Dashboard Title -->
             <h1 class="dashboard-title">Dashboard</h1>
 
-            <!-- Botón: Cerrar Sesión -->
             <a href="index.html" class="logout">Cerrar sesión</a>
 
-            <!-- Caja centrada -->
             <div class="content-box">
                 <h2 class="summary-title">Resumen General</h2>
                 <div class="content">
-                    <!-- Botones juntos -->
                     <button onclick="location.href='balance.html'" class="card-button">
                         <h2>Saldo</h2>
                         <p>$ 1,000.00</p>
@@ -52,8 +46,46 @@
                         <p>5</p>
                     </button>
                 </div>
+
+                <button onclick="renderChart()" class="load-chart-button">Mostrar Gráfico de Categorías</button>
+
+                <div class="chart-container" style="width: 80%; margin: 20px auto;">
+                    <canvas id="myChart" width="400" height="200"></canvas>
+                </div>
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        async function renderChart() {
+            try {
+                const response = await fetch('http://localhost:5000/api/transactions/summary');
+                const data = await response.json();
+
+                const ctx = document.getElementById('myChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.map(item => item.tag),      
+                        datasets: [{
+                            label: 'Total por Categoría',
+                            data: data.map(item => item.total),  
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Error loading chart data:", error);
+            }
+        }
+    </script>
 </body>
 </html>

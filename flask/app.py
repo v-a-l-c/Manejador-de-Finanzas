@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, request, jsonify, session
+from flask import Flask, send_from_directory, request, jsonify, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import db
@@ -6,12 +6,29 @@ from models.users import Usuarios
 from routes.signup import signup_bp
 from routes.signout import signout_bp
 from routes.login import login_route
+from routes.confirm_email import confirm_email_bp
+from routes.charts import chart_bp  
+
+
+from flask_mail import Mail, Message
+from itsdangerous import URLSafeTimedSerializer
 
 def create_app():
     app = Flask(__name__, static_folder='public', static_url_path='')
     app.secret_key = "epicomomentogamer"
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://user:userpassword@mysql/mydatabase'
     CORS(app, resources={r"/auth/*": {"origins": "*", "methods": ["POST", "OPTIONS"], "supports_credentials": True}})
+
+    app.config['MAIL_SERVER'] = 'monkeymyp@gmail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USERNAME'] = 'monkeymyp@gmail.com'
+    app.config['MAIL_PASSWORD'] = 'equipo4equipo4'
+    app.config['MAIL_DEFAULT_SENDER'] = 'monkeymyp@gmail.com'
+
+    mail = Mail(app)
+    serializer = URLSafeTimedSerializer("olamau")
+
 
     db.init_app(app)
 
@@ -21,6 +38,10 @@ def create_app():
     app.register_blueprint(signup_bp, url_prefix='/auth')
     app.register_blueprint(signout_bp, url_prefix='/auth')
     app.register_blueprint(login_route, url_prefix='/auth')
+    app.register_blueprint(confirm_email_bp, url_prefix='/confirm')
+    app.register_blueprint(chart_bp)
+
+
 
     @app.route('/')
     def serve_index():
