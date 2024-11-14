@@ -1,6 +1,7 @@
 from flask import request, Blueprint, jsonify, session
 from models.users import Usuarios
 from models import db
+from routes.sessions import current_session
 
 login_route = Blueprint('login_route', __name__)
 
@@ -8,7 +9,6 @@ login_route = Blueprint('login_route', __name__)
 @login_route.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':
-        user = session.get("user_id")
         data_json = request.get_json()
         password = data_json.get('password')
         current_username = data_json.get('username')
@@ -18,9 +18,10 @@ def login():
             return jsonify({"username": current_username, "response": "no_user_found"}), 400
 
         elif user.check_password(password):
+            current_session['user_id'] = user.id
             return jsonify({"username": current_username, "response": "success"}), 201
 
         else:
             return jsonify({"username": current_username, "response": "no_access", "description": "invalid password"})
 
-    return jsonify({'response': "NO_POST_METHOD"})
+    return jsonify({'response': "NO_POST_METHOD"}), 404
