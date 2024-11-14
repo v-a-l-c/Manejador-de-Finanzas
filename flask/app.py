@@ -17,7 +17,7 @@ def create_app():
     from routes.signout import signout_bp
     from routes.login import login_route
     from routes.update import update
-
+    from routes.incomes import incomes
     
 
     with app.app_context():
@@ -27,6 +27,7 @@ def create_app():
     app.register_blueprint(signup_bp, url_prefix='/auth')
     app.register_blueprint(signout_bp, url_prefix='/auth')
     app.register_blueprint(login_route, url_prefix='/auth')
+    app.register_blueprint(incomes, url_prefix= '/transactions')
 
     @app.route('/')
     def serve_index():
