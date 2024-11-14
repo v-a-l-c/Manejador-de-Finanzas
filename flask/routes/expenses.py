@@ -40,7 +40,7 @@ def add_expense():
         return jsonify({"message": "Database error", "error": str(e)}), 500
 
 
-@expenses_bp.route('/expenses/per-day', methods=['POST'])
+@expenses_bp.route('/expenses/day', methods=['POST'])
 def get_expense_per_day():
     try:
         data_json = request.get_json()
@@ -59,7 +59,7 @@ def get_expense_per_day():
         return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
 
 
-@expenses_bp.route('/expenses/per-month', methods=['POST'])
+@expenses_bp.route('/expenses/month', methods=['POST'])
 def get_expense_per_month():
     try:
         data_json = request.get_json()
@@ -78,7 +78,7 @@ def get_expense_per_month():
         return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
 
 
-@expenses_bp.route('/expenses/per-year', methods=['POST'])
+@expenses_bp.route('/expenses/year', methods=['POST'])
 def get_expense_per_year():
     try:
         data_json = request.get_json()

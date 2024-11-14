@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MonKey - Dashboard</title>
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
+
 <body>
     <div class="container">
         <div class="sidebar">
@@ -20,7 +22,7 @@
             </nav>
             <a href="settings.html" class="settings">Configuración</a>
         </div>
-        
+
         <div class="main-content">
             <h1 class="dashboard-title">Dashboard</h1>
 
@@ -47,45 +49,24 @@
                     </button>
                 </div>
 
-                <button onclick="renderChart()" class="load-chart-button">Mostrar Gráfico de Categorías</button>
+                <button onclick="getExpenseData('day')" class="load-chart-button">Mostrar Gasto por Día</button>
+                <button onclick="getExpenseData('month')" class="load-chart-button">Mostrar Gasto por Mes</button>
+                <button onclick="getExpenseData('year')" class="load-chart-button">Mostrar Gasto por Año</button>
 
                 <div class="chart-container" style="width: 80%; margin: 20px auto;">
+                    <!-- Contenedor para el gráfico -->
                     <canvas id="myChart" width="400" height="200"></canvas>
+                    <!-- Contenedor para el mensaje si no hay datos -->
+                    <div id="no-data-message" style="display:none; text-align:center; color:red;">
+                        No hay datos disponibles para mostrar.
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        async function renderChart() {
-            try {
-                const response = await fetch('http://localhost:5000/api/transactions/summary');
-                const data = await response.json();
-
-                const ctx = document.getElementById('myChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: data.map(item => item.tag),      
-                        datasets: [{
-                            label: 'Total por Categoría',
-                            data: data.map(item => item.total),  
-                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: { beginAtZero: true }
-                        }
-                    }
-                });
-            } catch (error) {
-                console.error("Error loading chart data:", error);
-            }
-        }
-    </script>
+    <script src="js/dashboard.js"></script>
 </body>
+
 </html>

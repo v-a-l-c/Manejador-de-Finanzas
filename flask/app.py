@@ -15,6 +15,9 @@ def create_app():
     app.secret_key = "epicomomentogamer"
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://user:userpassword@mysql/mydatabase'
     CORS(app, resources={r"/auth/*": {"origins": "*", "methods": ["POST", "OPTIONS", "PUT"], "supports_credentials": True}})
+    CORS(app, resources={r"/transactions/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"], "supports_credentials": True}})
+
+
 
     app.config['MAIL_SERVER'] = 'monkeymyp@gmail.com'
     app.config['MAIL_PORT'] = 587

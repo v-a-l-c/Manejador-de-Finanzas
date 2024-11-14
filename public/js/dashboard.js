@@ -14,3 +14,77 @@ function setRandomBackground() {
 }
 
 window.onload = setRandomBackground;
+
+async function getExpenseData(timePeriod) {
+    try {
+        let url = '';
+
+        if (timePeriod === 'day') {
+            url = 'http://172.19.0.3:5000/transactions/expenses/day';
+        } else if (timePeriod === 'month') {
+            url = 'http://172.19.0.3:5000/transactions/expenses/month';
+        } else if (timePeriod === 'year') {
+            url = 'http://172.19.0.3:5000/transactions/expenses/year';
+        }
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ date: new Date().toISOString() })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        console.log(data);
+
+        renderChart(data.resource);
+    } catch (error) {
+        console.error("Error loading chart data:", error.message);
+    }
+}
+
+
+
+function renderChart(data) {
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    if (!data || data.length === 0) {
+        data = [{ date: '', amount: 0 }]; 
+    }
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.map(item => item.date), 
+            datasets: [{
+                label: 'Gasto Total',
+                data: data.map(item => item.amount),  
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItem) {
+
+                            return tooltipItem[0].raw ? tooltipItem[0].label : 'No disponible';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
