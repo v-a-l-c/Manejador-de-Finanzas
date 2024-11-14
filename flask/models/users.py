@@ -17,6 +17,30 @@ class Usuarios(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    def set_username(self, username):
+        self.username = username
+
+    def set_mail(self, mail):
+        self.mail = mail
+
+    def get_id(self):
+        return self.id
+    
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+    
+    def set_rfc(self, rfc):
+        self.rfc = rfc
+        
+    def set_curp(self, curp):
+        self.curp = curp
+    
+    def set_first_name(self, firstName):
+        self.firstName = firstName
+    
+    def set_second_names(self, secondNames):
+        self.secondNames = secondNames
 
     def __repr__(self):
         return f'<Usuario {self.username}>'
