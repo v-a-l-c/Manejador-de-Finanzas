@@ -95,3 +95,101 @@ def get_expense_per_year():
 
     except Exception as e:
         return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
+
+@expenses_bp.route('/expenses/aotday', methods=['POST'])
+def get_expense_per_day_aot():
+    try:
+        data_json = request.get_json()
+        user_id = current_session.get('user_id')
+
+        if user_id is None:
+            return jsonify({"message": "User not authenticated"}), 401
+
+        expenses = db.session.query(
+            func.date(Transactions.date).label('date'),
+            func.sum(Transactions.amount).label('total_amount')
+        ).join(
+            Users, Users.id == Transactions.user_id  
+        ).filter(
+            Transactions.type_id == 2,
+            Transactions.user_id == user_id
+        ).group_by(func.date(Transactions.date)).all()
+
+        result = [{'date': str(expense.date), 'amount': expense.total_amount} for expense in expenses]
+
+        print("Resultado de expenses por dia:", result)
+
+        return jsonify({
+            "message": "expense_per_day_returned", 
+            "resource": result
+        }), 200
+
+    except Exception as e:
+        print("Error en /expenses/aotyear:", e)
+        return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
+@expenses_bp.route('/expenses/aotmonth', methods=['POST'])
+def get_expense_per_month_aot():
+    try:
+        data_json = request.get_json()
+        user_id = current_session.get('user_id')
+
+        if user_id is None:
+            return jsonify({"message": "User not authenticated"}), 401
+
+        expenses = db.session.query(
+            func.date(Transactions.date).label('date'),
+            func.sum(Transactions.amount).label('total_amount')
+        ).join(
+            Users, Users.id == Transactions.user_id
+        ).filter(
+            Transactions.type_id == 2,
+            Transactions.user_id == user_id
+        ).group_by(func.strftime('%Y-%m', Transactions.date)).all()
+
+        result = [{'date': expense.date, 'amount': expense.total_amount} for expense in expenses]
+
+        print("Resultado de expenses por mes:", result)
+
+        return jsonify({
+            "message": "expense_per_month_returned", 
+            "resource": result
+        }), 200
+
+    except Exception as e:
+        print("Error en /expenses/aotyear:", e)
+        return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
+
+
+@expenses_bp.route('/expenses/aotyear', methods=['POST'])
+def get_expense_per_year_aot():
+    try:
+        print("Entrando en la ruta aotyear")
+
+        data_json = request.get_json()
+        user_id = current_session.get('user_id')
+        print("User ID:", user_id) 
+
+        if user_id is None:
+            return jsonify({"message": "User not authenticated"}), 401
+
+        expenses = db.session.query(
+            func.year(Transactions.date).label('year'),
+            func.sum(Transactions.amount).label('total_amount')
+        ).join(
+            Users, Users.id == Transactions.user_id
+        ).filter(
+            Transactions.type_id == 2,
+            Transactions.user_id == user_id
+        ).group_by(func.year(Transactions.date)).all()
+        
+        print("Expenses:", expenses) 
+
+        result = [{'date': expense.year, 'amount': expense.total_amount} for expense in expenses]
+        return jsonify({
+            "message": "expense_per_year_returned", 
+            "resource": result
+        }), 200
+
+    except Exception as e:
+        print("Error:", e)  
+        return jsonify({"message": "server_not_process_data", "response": str(e)}), 500

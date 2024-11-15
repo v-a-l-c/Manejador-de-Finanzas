@@ -3,15 +3,16 @@ version: '3.8'
 services:
   backend:
     build:
-      context: .                      
-      dockerfile: docker/Dockerfile.backend   
+      context: .
+      dockerfile: docker/Dockerfile.backend
     ports:
       - "5001:5000"
     depends_on:
-      - mysql                         
+      - mysql
     environment:
-      FLASK_APP: app.py              
-      FLASK_RUN_HOST: 0.0.0.0         
+      FLASK_APP: app.py
+      FLASK_ENV: development
+      FLASK_RUN_HOST: 0.0.0.0
       FLASK_RUN_PORT: 5000
       SQLALCHEMY_DATABASE_URI: mysql+pymysql://user:userpassword@mysql/mydatabase
     networks:
@@ -19,6 +20,7 @@ services:
 
   mysql:
     image: mysql:5.7
+    container_name: mysql-container
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: mydatabase
@@ -26,6 +28,8 @@ services:
       MYSQL_PASSWORD: userpassword
     ports:
       - "3306:3306"
+    volumes:
+      - ./my.cnf:/etc/mysql/my.cnf
     networks:
       - app-network
 
