@@ -1,57 +1,57 @@
-let incomeTableData = [];
-let isEditingIncome = false;
-let editingIncomeIndex = null;
+let tableData = [];
+let isEditing = false;
+let editingIndex = null;
 
-// Enviar un nuevo ingreso al backend
-async function submitIncome(income) {
+// Enviar un nuevo gasto al backend
+async function submitExpense(expense) {
     try {
-        const response = await fetch('/incomes/add', {
+        const response = await fetch('/expenses/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(income),
+            body: JSON.stringify(expense),
         });
 
         if (response.ok) {
             const result = await response.json();
-            showIncomeMessage(result.response || "Income added successfully");
-            fetchIncomes(); // Actualiza la tabla con los datos más recientes
+            showMessage(result.response || "Expense added successfully");
+            fetchExpenses(); // Actualiza la tabla con los datos más recientes
         } else {
             const error = await response.json();
-            alert("Error: " + (error.message || "Failed to add income"));
+            alert("Error: " + (error.message || "Failed to add expense"));
         }
     } catch (error) {
         alert("Error: " + error.message);
     }
 }
 
-// Manejar la presentación del formulario para agregar o editar un ingreso
-function handleIncomeFormSubmit(event) {
+// Manejar la presentación del formulario para agregar o editar un gasto
+function handleFormSubmit(event) {
     event.preventDefault();
 
     const description = document.getElementById("description").value;
     const amount = parseFloat(document.getElementById("amount").value).toFixed(2);
     const date = document.getElementById("date").value;
 
-    const income = { description, amount, date };
+    const expense = { description, amount, date };
 
-    if (isEditingIncome) {
-        incomeTableData[editingIncomeIndex] = income;
-        showIncomeMessage("Modified Successfully");
-        isEditingIncome = false;
-        editingIncomeIndex = null;
+    if (isEditing) {
+        tableData[editingIndex] = expense;
+        showMessage("Modified Successfully");
+        isEditing = false;
+        editingIndex = null;
     } else {
-        submitIncome(income); // Enviar el ingreso al backend
+        submitExpense(expense); // Enviar el gasto al backend
     }
 
-    renderIncomeTable();
-    resetIncomeForm();
+    renderTable();
+    resetForm();
 }
 
-// Obtener ingresos del backend (diario, mensual o anual)
-async function fetchIncomes(period = 'per-day') {
-    const endpoint = `/incomes/${period}`;
+// Obtener gastos del backend (diario, mensual o anual)
+async function fetchExpenses(period = 'day') {
+    const endpoint = `/expenses/${period}`;
     const date = document.getElementById("date").value; // Usa la fecha seleccionada para obtener datos
 
     try {
@@ -65,71 +65,71 @@ async function fetchIncomes(period = 'per-day') {
 
         if (response.ok) {
             const data = await response.json();
-            incomeTableData = data.resource || [];
-            renderIncomeTable();
+            tableData = data.resource || [];
+            renderTable();
         } else {
             const error = await response.json();
-            alert("Error: " + (error.message || "Failed to fetch incomes"));
+            alert("Error: " + (error.message || "Failed to fetch expenses"));
         }
     } catch (error) {
         alert("Error: " + error.message);
     }
 }
 
-// Renderizar la tabla con los datos de los ingresos
-function renderIncomeTable() {
+// Renderizar la tabla con los datos de los gastos
+function renderTable() {
     const tbody = document.querySelector("#dataTable tbody");
     tbody.innerHTML = "";
 
-    incomeTableData.forEach((data, index) => {
+    tableData.forEach((data, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${index + 1}</td>
             <td>${data.description}</td>
             <td>$${parseFloat(data.amount).toFixed(2)}</td>
             <td>${data.date}</td>
-            <td><button onclick="editIncomeRow(${index})">Modify</button></td>
+            <td><button onclick="editRow(${index})">Modify</button></td>
         `;
         tbody.appendChild(row);
     });
 }
 
 // Mostrar un mensaje de éxito
-function showIncomeMessage(message) {
+function showMessage(message) {
     const successMessage = document.getElementById("successMessage");
     successMessage.textContent = message;
     successMessage.style.display = "block";
     setTimeout(() => successMessage.style.display = "none", 2000);
 }
 
-// Editar una fila en la tabla de ingresos
-function editIncomeRow(index) {
-    const data = incomeTableData[index];
+// Editar una fila en la tabla
+function editRow(index) {
+    const data = tableData[index];
     document.getElementById("description").value = data.description;
     document.getElementById("amount").value = data.amount;
     document.getElementById("date").value = data.date;
 
-    isEditingIncome = true;
-    editingIncomeIndex = index;
+    isEditing = true;
+    editingIndex = index;
 
     document.getElementById("menuTitle").textContent = "Modify";
     document.getElementById("deleteButton").style.display = "inline-block";
 }
 
 // Reiniciar el formulario y el estado
-function resetIncomeForm() {
+function resetForm() {
     document.getElementById("description").value = "";
     document.getElementById("amount").value = "";
     document.getElementById("date").value = "";
-    isEditingIncome = false;
-    editingIncomeIndex = null;
+    isEditing = false;
+    editingIndex = null;
 
     document.getElementById("menuTitle").textContent = "Add";
     document.getElementById("deleteButton").style.display = "none";
 }
 
-// Búsqueda en la tabla de ingresos
-function searchIncomeTable() {
+// Búsqueda en la tabla
+function searchTable() {
     const input = document.getElementById("searchInput").value.toLowerCase();
     const rows = document.querySelectorAll("#dataTable tbody tr");
 
@@ -141,12 +141,13 @@ function searchIncomeTable() {
 }
 
 // Limpiar el campo de búsqueda
-function clearIncomeSearch() {
+function clearSearch() {
     document.getElementById("searchInput").value = "";
-    renderIncomeTable();
+    renderTable();
 }
 
 // Función para cargar la tabla al cargar la página
 document.addEventListener("DOMContentLoaded", () => {
-    fetchIncomes('per-day'); // Por defecto, obtener ingresos diarios
+    fetchExpenses('day'); // Por defecto, obtener gastos diarios
 });
+
