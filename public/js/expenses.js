@@ -5,7 +5,7 @@ let editingIndex = null;
 // Enviar un nuevo gasto al backend
 async function submitExpense(expense) {
     try {
-        const response = await fetch('/expenses/add', {
+        const response = await fetch('http://172.24.0.3:5000/transactions/expenses/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ function handleFormSubmit(event) {
 
 // Obtener gastos del backend (diario, mensual o anual)
 async function fetchExpenses(period = 'day') {
-    const endpoint = `/expenses/${period}`;
+    const endpoint = `http://172.24.0.3:5000/transactions/expenses/${period}`;
     const date = document.getElementById("date").value; // Usa la fecha seleccionada para obtener datos
 
     try {

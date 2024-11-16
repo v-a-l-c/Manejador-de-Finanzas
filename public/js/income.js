@@ -5,7 +5,7 @@ let editingIncomeIndex = null;
 // Enviar un nuevo ingreso al backend
 async function submitIncome(income) {
     try {
-        const response = await fetch('/incomes/add', {
+        const response = await fetch('http://172.24.0.3:5000/transactions/incomes/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ function handleIncomeFormSubmit(event) {
 
 // Obtener ingresos del backend (diario, mensual o anual)
 async function fetchIncomes(period = 'per-day') {
-    const endpoint = `/incomes/${period}`;
+    const endpoint = `http://172.24.0.3:5000/transactions/incomes/${period}`;
     const date = document.getElementById("date").value; // Usa la fecha seleccionada para obtener datos
 
     try {
