@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (newUsername === confirmUsername) {
             try {
                 const response = await fetch("/auth/update_username", {
-                    method: "POST",
+                    method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ username: newUsername }),
                 });
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (newEmail === confirmEmail) {
             try {
                 const response = await fetch("/auth/update_email", {
-                    method: "POST",
+                    method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ email: newEmail }),
                 });
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (newPassword === confirmPassword) {
             try {
                 const response = await fetch("/auth/update_password", {
-                    method: "POST",
+                    method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ password: newPassword }),
                 });
