@@ -1,0 +1,243 @@
+/* Paleta de colores */
+:root {
+    --color-dark: #181C26;
+    --color-medium: #525559;
+    --color-light: #F2F2F2;
+    --color-accent: #A67951;
+    --color-secondary: #261201;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: var(--color-light);
+    background-color: var(--color-dark);
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    background-color: var(--color-dark);
+    color: var(--color-light);
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.sidebar h1 {
+    font-size: 1.5em;
+    margin-bottom: 2em;
+    color: var(--color-light);
+}
+
+.sidebar nav ul {
+    list-style: none;
+}
+
+.sidebar nav ul li {
+    margin-bottom: 1.5em;
+}
+
+.sidebar nav ul li a {
+    text-decoration: none;
+    color: var(--color-light);
+    font-size: 1.2em;
+    transition: color 0.3s ease;
+}
+
+.sidebar nav ul li a:hover {
+    color: var(--color-accent);
+}
+
+.settings {
+    text-decoration: none;
+    color: var(--color-light);
+    font-size: 1em;
+    padding: 10px;
+    border: 2px solid var(--color-light);
+    border-radius: 5px;
+    text-align: center;
+    display: block;
+    margin-top: auto;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.settings:hover {
+    background-color: var(--color-light);
+    color: var(--color-dark);
+}
+
+.main-content {
+    flex: 1;
+    position: relative;
+    padding: 20px;
+    background-color: var(--color-secondary);
+    color: var(--color-light);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Barra de búsqueda */
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid var(--color-medium);
+    border-radius: 5px;
+    background-color: var(--color-dark);
+    color: var(--color-light);
+}
+
+.search-bar button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--color-accent);
+    color: var(--color-light);
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.search-bar button:hover {
+    background-color: var(--color-light);
+    color: var(--color-dark);
+}
+
+/* Tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    border: 1px solid var(--color-medium);
+    padding: 8px;
+    text-align: center;
+}
+
+table th {
+    background-color: var(--color-medium);
+    color: var(--color-light);
+}
+
+table tbody tr:nth-child(even) {
+    background-color: var(--color-dark);
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: var(--color-medium);
+}
+
+table tbody tr:hover {
+    background-color: var(--color-accent);
+    color: var(--color-dark);
+    cursor: pointer;
+}
+
+/* Mensaje */
+.message {
+    font-size: 1.2em;
+    color: var(--color-accent);
+    margin-top: 10px;
+    display: none;
+}
+
+/* Menú de acciones */
+.menu {
+    flex: 1;
+    border: 2px solid var(--color-medium);
+    padding: 20px;
+    border-radius: 8px;
+    background-color: var(--color-dark);
+    color: var(--color-light);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.menu h2 {
+    font-size: 1.5em;
+    color: var(--color-accent);
+}
+
+.menu label {
+    font-size: 1em;
+    margin-bottom: 5px;
+}
+
+.menu input, .menu select, .menu button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px solid var(--color-medium);
+    border-radius: 5px;
+    background-color: var(--color-dark);
+    color: var(--color-light);
+}
+
+.menu button {
+    background-color: var(--color-accent);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu button:hover {
+    background-color: var(--color-light);
+    color: var(--color-dark);
+}
+
+/* Botón de Cerrar Sesión */
+.logout {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: var(--color-light);
+    font-size: 1em;
+    padding: 10px;
+    border: 2px solid var(--color-light);
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.logout:hover {
+    background-color: var(--color-light);
+    color: var(--color-dark);
+}
+
+/* Layout para la tabla y el menu */
+.table-menu-container {
+    display: flex;
+    gap: 20px;
+}
+
+/* estilo de la tabla */
+.table-container {
+    flex: 3;
+}
+
+/* Ajustes de venatana */
+@media (max-width: 768px) {
+    .table-menu-container {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<!--Vamos a refactorizar el de deuda, es prácticamente lo mismo-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MonKey - Ingresos</title>
+    <link rel="stylesheet" href="css/debts.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Barra lateral -->
+        <div class="sidebar">
+            <h1>MonKey</h1>
+            <nav>
+                <ul>
+                    <li><a href="history.html">Historial</a></li>
+                    <li><a href="income.html">Ingresos</a></li>
+                    <li><a href="transaction.html">Transacciones</a></li>
+                    <li><a href="debts.html" class="active">Deudas</a></li>
+                </ul>
+            </nav>
+            <a href="settings.html" class="settings">Configuración</a>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="main-content">
+            <a href="index.html" class="logout">Cerrar sesión</a>
+            <h1 class="dashboard-title">Ingresos</h1>
+
+            <!-- Contenedor de la tabla y el menú -->
+            <div class="table-menu-container">
+                <!-- Contenedor de la tabla -->
+                <div class="table-container">
+                    <div class="search-bar">
+                        <!-- Botón para limpiar la búsqueda y restablecer la tabla -->
+                        <button onclick="clearSearch()">Limpiar</button>
+                        <!-- Barra de búsqueda -->
+                        <input type="text" id="searchInput" placeholder="Buscar por ID, Descripción, Cantidad, Fecha o Rubro">
+                        <button onclick="searchTable()">Buscar</button>
+                    </div>
+
+                    <table id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Fecha</th>
+                                <th>Rubro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Filas dinámicas -->
+                        </tbody>
+                    </table>
+
+                    <!-- Mensaje de estado de la búsqueda o mensaje de error -->
+                    <p id="message" class="message"></p>
+                </div>
+
+                <!-- Menú de acciones -->
+                <div class="menu">
+                    <h2 id="menuTitle">Añadir/Modificar</h2>
+                    <form id="actionForm" onsubmit="handleFormSubmit(event)">
+                        <label for="description">Descripción</label>
+                        <input type="text" id="description" required>
+
+                        <label for="amount">Cantidad</label>
+                        <input type="number" id="amount" required min="0">
+
+                        <label for="date">Fecha</label>
+                        <!-- Fecha con restricción de rango -->
+                        <input type="date" id="date" required min="1900-01-01" max="2552-09-14">
+
+                        <label for="category">Rubro</label>
+                        <select id="category">
+                            <option>COMIDA</option>
+                            <option>TRANSPORTE</option>
+                            <option>VIVIENDA</option>
+                            <option value="add-new">Añadir nuevo rubro</option> <!-- Opción para agregar nuevo rubro -->
+                        </select>
+
+                        <!-- Contenedor para añadir un nuevo rubro, oculto por defecto -->
+                        <div id="newCategoryContainer" style="display: none;">
+                            <input type="text" id="newCategory" placeholder="Nuevo rubro">
+                            <button type="button" onclick="addNewCategory()">Añadir Rubro</button>
+                        </div>
+
+                        <button type="submit" id="addButton">Agregar</button>
+                        <button type="button" id="deleteButton" onclick="deleteRow()" style="display: none;">Borrar</button>
+                    </form>
+
+                    <!-- Mensaje de éxito para las acciones -->
+                    <p id="successMessage" class="success-message"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Archivo JavaScript -->
+    <script src="js/income.js"></script>
+</body>
+
+</html>
