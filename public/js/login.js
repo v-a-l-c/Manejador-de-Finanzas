@@ -8,7 +8,7 @@ document.getElementById("login-form").addEventListener("submit", async (event) =
     };
 
     try {
-        const response = await fetch("http://172.24.0.3:5000/auth/login", {  // URL actualizada
+        const response = await fetch("172.16.238.10:5000/auth/login", {  // URL actualizada
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

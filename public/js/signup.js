@@ -13,7 +13,7 @@ document.getElementById("signup-form").addEventListener("submit", async (event) 
     };
 
     try {
-        const response = await fetch("http://172.24.0.3:5000/auth/", {  
+        const response = await fetch("172.16.238.10:5000/auth/", {  
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -20,11 +20,11 @@ async function getExpenseData(timePeriod) {
         let url = '';
 
         if (timePeriod === 'day') {
-            url = 'http://172.24.0.3:5000/transactions/expenses/aotday';
+            url = '172.16.238.10:5000/transactions/expenses/aotday';
         } else if (timePeriod === 'month') {
-            url = 'http://172.24.0.3:5000/transactions/expenses/aotmonth';
+            url = '172.16.238.10:50000/transactions/expenses/aotmonth';
         } else if (timePeriod === 'year') {
-            url = 'http://172.24.0.3:5000/transactions/expenses/aotyear';
+            url = '172.16.238.10:5000transactions/expenses/aotyear';
         }
 
         const response = await fetch(url, {
