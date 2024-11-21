@@ -7,6 +7,7 @@ services:
       dockerfile: docker/Dockerfile.backend
     ports:
       - "5001:5000"
+      - "443:443"
     depends_on:
       - mysql
     environment:
@@ -15,9 +16,10 @@ services:
       FLASK_RUN_HOST: 0.0.0.0
       FLASK_RUN_PORT: 5000
       SQLALCHEMY_DATABASE_URI: mysql+pymysql://user:userpassword@mysql/mydatabase
+      BACKEND_URL: https://backend:5000
     networks:
-      - app-network
-
+      app-network:
+        ipv4_address: 172.16.238.10 
   mysql:
     image: mysql:5.7
     container_name: mysql-container
@@ -31,7 +33,9 @@ services:
     volumes:
       - ./my.cnf:/etc/mysql/my.cnf
     networks:
-      - app-network
+      app-network:
+        ipv4_address: 172.16.238.20 
+    restart: always  
 
   js-server:
     build:
@@ -40,10 +44,14 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - app-network
+      app-network:
+        ipv4_address: 172.16.238.30  
     depends_on:
       - backend
 
 networks:
   app-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.238.0/24  
