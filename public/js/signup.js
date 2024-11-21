@@ -13,7 +13,8 @@ document.getElementById("signup-form").addEventListener("submit", async (event) 
     };
 
     try {
-        const response = await fetch("http://172.19.0.3:5000/auth/", {  
+        const response = await fetch("http://172.19.0.3:5000/auth/", { 
+            mode: 'cors', 
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
