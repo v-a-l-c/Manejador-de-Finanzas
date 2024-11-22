@@ -1,90 +1,110 @@
+// Imágenes para el fondo
 const images = [
     "FondoDash1.jpg",
     "FondoDash2.jpg",
 ];
 
+// Función para establecer un fondo aleatorio
 function setRandomBackground() {
     const randomImage = images[Math.floor(Math.random() * images.length)];
-    
     const mainContent = document.querySelector('.main-content');
     mainContent.style.backgroundImage = `url('images/${randomImage}')`;
-    mainContent.style.backgroundSize = 'cover';        
-    mainContent.style.backgroundPosition = 'center';   
-    mainContent.style.backgroundRepeat = 'no-repeat';  
+    mainContent.style.backgroundSize = 'cover';
+    mainContent.style.backgroundPosition = 'center';
+    mainContent.style.backgroundRepeat = 'no-repeat';
 }
 
+// Ejecutar la función al cargar la página
 window.onload = setRandomBackground;
 
+// Función para obtener los datos de gastos desde la API
 async function getExpenseData(timePeriod) {
-    try {
-        let url = '';
+    const noDataMessage = document.getElementById('no-data-message');
+    const chartContainer = document.getElementById('myChart');
+    
+    noDataMessage.style.display = 'none';
+    chartContainer.style.display = 'none';
 
-        if (timePeriod === 'day') {
-            url = 'http://172.16.238.10:5000/transactions/expenses/aotday';
-        } else if (timePeriod === 'month') {
-            url = 'http://172.16.238.10:5000/transactions/expenses/aotmonth';
-        } else if (timePeriod === 'year') {
-            url = 'http://172.16.238.10:5000transactions/expenses/aotyear';
+    try {
+        const baseURL = 'http://172.16.238.10:5000/transactions/expenses/aot';
+        const timeMap = {
+            day: 'day',
+            quincena: 'quincena',
+            month: 'month',
+            year: 'year',
+        };
+
+        if (!timeMap[timePeriod]) {
+            throw new Error('Periodo no soportado');
         }
+
+        const url = `${baseURL}${timeMap[timePeriod]}`;
 
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ date: new Date().toISOString() })
+            body: JSON.stringify({ date: new Date().toISOString() }),
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`Error al cargar los datos: ${response.status}`);
         }
 
         const data = await response.json();
-
-        console.log(data);
-
-        renderChart(data.resource);
+        renderChart(data.resource, timePeriod); // Pasar timePeriod para personalizar el gráfico
     } catch (error) {
-        console.error("Error loading chart data:", error.message);
+        console.error('Error:', error.message);
+        noDataMessage.style.display = 'block';
+    } finally {
+        chartContainer.style.display = 'block';
     }
 }
 
-
-
-function renderChart(data) {
+// Función para renderizar el gráfico con Chart.js
+function renderChart(data, timePeriod) {
     const ctx = document.getElementById('myChart').getContext('2d');
 
+    // Si no hay datos, usar valores por defecto
     if (!data || data.length === 0) {
-        data = [{ date: '', amount: 0 }]; 
+        data = [{ date: '', amount: 0 }];
     }
+
+    const labels = data.map(item => item.date);
+    const amounts = data.map(item => item.amount);
 
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: data.map(item => item.date), 
-            datasets: [{
-                label: 'Gasto Total',
-                data: data.map(item => item.amount),  
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            }]
+            labels,
+            datasets: [
+                {
+                    label: `Gastos por ${timePeriod}`,
+                    data: amounts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                },
+            ],
         },
         options: {
-            scales: {
-                y: { beginAtZero: true }
-            },
+            responsive: true,
             plugins: {
+                legend: {
+                    position: 'top',
+                },
                 tooltip: {
                     callbacks: {
-                        title: function(tooltipItem) {
-
-                            return tooltipItem[0].raw ? tooltipItem[0].label : 'No disponible';
-                        }
-                    }
-                }
-            }
-        }
+                        label: function (context) {
+                            return `Fecha: ${context.label} - Monto: $${context.raw}`;
+                        },
+                    },
+                },
+            },
+            scales: {
+                y: { beginAtZero: true },
+            },
+        },
     });
 }
-

@@ -135,15 +135,14 @@ def get_expense_per_month_aot():
         return jsonify({"message": "User not authenticated"}), 401
 
     expenses = db.session.query(
-        func.date(Transactions.date).label('date'),
+        func.date_format(Transactions.date, '%Y-%m').label('month'),
         func.sum(Transactions.amount).label('total_amount')
-    ).join(
-        Usuarios, Usuarios.id == Transactions.user_id  # Aquí es Usuarios, no Users
-    ).filter(
+    ).join(Usuarios, Usuarios.id == Transactions.user_id).filter(
         Transactions.type_id == 2,
         Transactions.user_id == user_id
-    ).group_by(func.strftime('%Y-%m', Transactions.date)).all()
-
+    ).group_by(
+        func.date_format(Transactions.date, '%Y-%m')
+    ).all()
     result = [{'date': str(expense.date), 'amount': expense.total_amount} for expense in expenses]
 
     return jsonify({

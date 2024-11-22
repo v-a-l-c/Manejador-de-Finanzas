@@ -89,7 +89,7 @@ def update_curp():
     data = request.get_json()
     curp = data.get('CURP')
     user_id = current_session.get('user_id')
-    user = Usurarios.query.get(user_id)
+    user = Usuarios.query.get(user_id)
     if is_curp_correct(curp):
         user.set_curp(curp)
         db.session.commit()
