@@ -30,7 +30,7 @@ La estructura de páginas es de la siguiente forma:
 *   **Inicio de Sesión:** `login.html` 
 *   **Dashboard:** `dashboard.html` Pra ver el balance general, con gráficos y filtros por fecha
 *   **Formulario de transacciones:** `transaction.html` Para registrar ingresos, egresos y aplicarles rubros.
-*    **debts.html;** `debts.html`
+*    **Página de Deudas** `debts.html`
 *    **Historial de transacciones:** `history.html` Para ver el historial filtrado por etiquetas o fechas.
 
 Con esto, tras eliminar todo rastro de Vue.js, el proyecto queda de la siguiente forma: 
