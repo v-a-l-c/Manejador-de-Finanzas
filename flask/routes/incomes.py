@@ -67,7 +67,6 @@ def get_amount_per_week():
 
 @incomes.route("/incomes/allincomes", methods=["GET"])
 def get_all_incomes():
-    """Ruta para obtener todos los ingresos de un usuario usando sesiones."""
     user_id = current_session.get('user_id')  
     if not user_id:
         return jsonify({"status": "error", "message": "No autenticado"}), 401

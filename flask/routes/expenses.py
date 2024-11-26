@@ -175,3 +175,19 @@ def get_expense_per_year_aot():
         "message": "expense_per_year_returned", 
         "resource": result
     }), 200
+
+
+
+@expenses_bp.route("/expenses/allexpenses", methods=["GET"])
+def get_all_expenses():
+    user_id = current_session.get('user_id')  
+    if not user_id:
+        return jsonify({"status": "error", "message": "No autenticado"}), 401
+
+    wallet = Wallet(user_id=user_id)
+
+    try:
+        expenses = wallet.get_all_expenses() 
+        return jsonify({"status": "success", "data": expenses}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500

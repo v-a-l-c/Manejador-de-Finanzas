@@ -36,7 +36,7 @@ function addNewCategory() {
 }
 
 // Manejar formulario para añadir o modificar una fila
-function handleFormSubmit(event) {
+async function handleFormSubmit(event) {
     event.preventDefault();
 
     const description = document.getElementById("description").value;
@@ -46,15 +46,39 @@ function handleFormSubmit(event) {
 
     if (isEditing) {
         tableData[editingIndex] = { description, amount, date, category };
-        showMessage("Modificado Exitosamente");
+        showMessage("Modificado exitosamente");
+        renderTable();
+        resetForm();
     } else {
-        tableData.push({ description, amount, date, category });
-        showMessage("Añadido Exitosamente");
-    }
+        const expenseData = { description, amount, date, category };
 
-    renderTable();
-    resetForm();
+        try {
+            const response = await fetch("http://172.16.238.10:5000/transactions/expenses/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(expenseData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("Gasto añadido:", data);
+                showMessage("Añadido exitosamente");
+                loadExpenses(); 
+                resetForm();    
+            } else {
+                console.error("Error al añadir gasto:", data.message);
+                showMessage("Error al añadir gasto");
+            }
+        } catch (error) {
+            console.error("Error al enviar el gasto:", error);
+            showMessage("Error al enviar el gasto");
+        }
+    }
 }
+
+
 
 // Mostrar mensaje de éxito
 function showMessage(message) {
@@ -129,3 +153,61 @@ document.getElementById("category").addEventListener("change", function () {
         document.getElementById("newCategoryContainer").style.display = "none";
     }
 });
+
+
+async function loadExpenses() {
+    const response = await fetch("http://172.16.238.10:5000/transactions/expenses/allexpenses", {
+        method: "GET",
+        credentials: "include"
+    });
+
+    if (!response.ok) {
+        alert("No estás autenticado. Por favor, inicia sesión.");
+        window.location.href = "/login.html";
+        return;
+    }
+
+    try {
+        const jsonResponse = await response.json();
+
+        if (jsonResponse.status === "success" && Array.isArray(jsonResponse.data)) {
+            const expenses = jsonResponse.data;
+            populateExpensesTable(expenses);
+        } else {
+            console.error("No se encontraron gastos o hubo un error:", jsonResponse.message);
+        }
+    } catch (error) {
+        console.error("Error al cargar los gastos:", error);
+    }
+}
+
+function populateExpensesTable(expenses) {
+    const dataTableBody = document.getElementById("expense-table-body");
+    if (!dataTableBody) {
+        console.error("El elemento de la tabla no se encuentra.");
+        return;
+    }
+
+    dataTableBody.innerHTML = "";
+
+    expenses.forEach((expense) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${expense.id}</td>
+            <td>${expense.description}</td>
+            <td>${expense.amount}</td>
+            <td>${expense.date}</td>
+            <td>${expense.category || "Sin rubro"}</td>
+            <td>
+                <button onclick="editExpense(${expense.id})">Editar</button>
+                <button onclick="deleteExpense(${expense.id})">Eliminar</button>
+            </td>
+        `;
+
+        dataTableBody.appendChild(row);
+    });
+}
+
+
+document.addEventListener("DOMContentLoaded", loadExpenses);
