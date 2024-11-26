@@ -74,7 +74,7 @@ class Wallet:
         current_incomes = db.session.execute(
             db.select(Transactions)
             .filter(Transactions.user_id == self.user_id)
-            .filter(Transactions.type_id == 1)  # type_id=1 para ingresos
+            .filter(Transactions.type_id == 1) 
         ).scalars().all()
 
         return [
@@ -85,4 +85,21 @@ class Wallet:
                 "id": income.id,
             }
             for income in current_incomes
+        ]
+
+    def get_all_expenses(self):
+        current_expenses = db.session.execute(
+            db.select(Transactions)
+            .filter(Transactions.user_id == self.user_id)
+            .filter(Transactions.type_id == 2)  
+        ).scalars().all()
+
+        return [
+            {
+                "amount": expense.amount,
+                "description": expense.description,
+                "date": expense.date,
+                "id": expense.id,
+            }
+            for expense in current_expenses
         ]
