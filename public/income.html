@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-<!--Vamos a refactorizar el de deuda, es prácticamente lo mismo-->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,9 +15,9 @@
             <nav>
                 <ul>
                     <li><a href="history.html">Historial</a></li>
-                    <li><a href="income.html">Ingresos</a></li>
+                    <li><a href="income.html" class="active">Ingresos</a></li>
                     <li><a href="transaction.html">Transacciones</a></li>
-                    <li><a href="debts.html" class="active">Deudas</a></li>
+                    <li><a href="debts.html">Deudas</a></li>
                 </ul>
             </nav>
             <a href="settings.html" class="settings">Configuración</a>
@@ -34,13 +33,12 @@
                 <!-- Contenedor de la tabla -->
                 <div class="table-container">
                     <div class="search-bar">
-                        <!-- Botón para limpiar la búsqueda y restablecer la tabla -->
-                        <button onclick="clearSearch()">Limpiar</button>
                         <!-- Barra de búsqueda -->
                         <input type="text" id="searchInput" placeholder="Buscar por ID, Descripción, Cantidad, Fecha o Rubro">
                         <button onclick="searchTable()">Buscar</button>
                     </div>
 
+                    <!-- Tabla de ingresos -->
                     <table id="dataTable">
                         <thead>
                             <tr>
@@ -52,7 +50,7 @@
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="data-table-body">
                             <!-- Filas dinámicas -->
                         </tbody>
                     </table>
@@ -103,5 +101,4 @@
     <!-- Archivo JavaScript -->
     <script src="js/income.js"></script>
 </body>
-
 </html>

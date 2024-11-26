@@ -64,3 +64,18 @@ def get_amount_per_week():
         return jsonify({"message": 'income_per_week_returned', "resource": current_wallet.get_amount_per_week(data_json['date'], 1)}), 201
     except Exception as e:
         return jsonify({"message": "server_not_process_data", "response" : str(e)}), 500
+
+@incomes.route("/incomes/allincomes", methods=["GET"])
+def get_all_incomes():
+    """Ruta para obtener todos los ingresos de un usuario usando sesiones."""
+    user_id = current_session.get('user_id')  
+    if not user_id:
+        return jsonify({"status": "error", "message": "No autenticado"}), 401
+
+    wallet = Wallet(user_id=user_id)
+
+    try:
+        incomes = wallet.get_all_incomes() 
+        return jsonify({"status": "success", "data": incomes}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
