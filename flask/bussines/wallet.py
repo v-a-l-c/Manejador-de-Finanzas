@@ -69,3 +69,20 @@ class Wallet:
             .filter(Transactions.type_id == type_id)
         )
         return self.response_data(current_amount)
+
+    def get_all_incomes(self):
+        current_incomes = db.session.execute(
+            db.select(Transactions)
+            .filter(Transactions.user_id == self.user_id)
+            .filter(Transactions.type_id == 1)  # type_id=1 para ingresos
+        ).scalars().all()
+
+        return [
+            {
+                "amount": income.amount,
+                "description": income.description,
+                "date": income.date,
+                "id": income.id,
+            }
+            for income in current_incomes
+        ]

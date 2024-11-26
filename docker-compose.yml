@@ -18,6 +18,8 @@ services:
     networks:
       app-network:
         ipv4_address: 172.16.238.10 
+    restart: always
+
 
   mysql:
     image: mysql:5.7
