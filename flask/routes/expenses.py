@@ -191,3 +191,19 @@ def get_all_expenses():
         return jsonify({"status": "success", "data": expenses}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+@expenses_bp.route("/expenses/allexpensesperiod", methods=["GET"])
+def get_all_expensesperiod():
+    user_id = current_session.get('user_id')  
+    if not user_id:
+        return jsonify({"status": "error", "message": "No autenticado"}), 401
+
+    timespan = request.args.get('timespan', 'day')  
+    wallet = Wallet(user_id=user_id)
+
+    try:
+        expenses = wallet.get_all_expenses_period(timespan)
+        return jsonify({"status": "success", "data": expenses}), 200
+    except Exception as e:
+        print(f"Error interno: {e}")  # Asegúrate de que estos logs aparezcan
+        return jsonify({"status": "error", "message": str(e)}), 500
