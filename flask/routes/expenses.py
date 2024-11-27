@@ -174,7 +174,7 @@ def get_all_expenses():
     wallet = Wallet(user_id=user_id)
 
     try:
-        expenses = wallet.get_all_expenses() 
+        expenses = wallet.get_all_transactions(2) 
         return jsonify({"status": "success", "data": expenses}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -194,3 +194,14 @@ def get_all_expensesperiod():
     except Exception as e:
         print(f"Error interno: {e}")  # Asegúrate de que estos logs aparezcan
         return jsonify({"status": "error", "message": str(e)}), 500
+
+@expenses_bp.route('/expenses/search', methods=['GET'])
+def search_transaction():
+    try:
+        data_json = request.get_json()
+        user_id = current_session.get('user_id')
+        current_wallet = Wallet(user_id)
+        return jsonify({"message": "transaction_search_returned", "resource": current_wallet.search_transaction(
+            data_json['date'], data_json['type_of_date'], data_json['tag'], 2)})
+    except Exception as e:
+        return jsonify({"message": "server_not_process_data", "response": str(e)}), 500

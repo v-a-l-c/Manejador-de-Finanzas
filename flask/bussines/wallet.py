@@ -3,6 +3,7 @@ from models.users import Usuarios
 from models.transactions import Transactions
 from models.tags import Tags
 from sqlalchemy import func
+from datetime import datetime
 
 """Create a new wallet from the current user. post and put incomes filter by day, month, year to show
 The class only has a logic personal wallet, to insert and show the amount registered. """
@@ -76,76 +77,92 @@ class Wallet:
         )
         return self.response_data(current_amount)
 
-    def get_all_incomes(self):
-        current_incomes = db.session.execute(
+    def get_all_transactions(self, type_id):
+        current_transactions = db.session.execute(
             db.select(Transactions, Tags.tag_name)
             .filter(Transactions.user_id == self.user_id)
-            .filter(Transactions.type_id == 1).join(Tags).filter(Transactions.tag_id == Tags.id)
+            .filter(Transactions.type_id == type_id).join(Tags).filter(Transactions.tag_id == Tags.id)
         ).all()
 
         return [
             {
-                "amount": income.amount,
-                "description": income.description,
+                "amount": transaction.amount,
+                "description": transaction.description,
                 "category": tag_name,
-                "date": income.date,
-                "id": income.id,
+                "date": transaction.date,
+                "id": transaction.id,
             }
-            for income, tag_name in current_incomes
+            for transaction, tag_name in current_transactions
         ]
+    def search_transaction(self, date, type_of_date, tag, type_id):
+        dates_transaction = {
+            "day": self.get_amount_per_day(date, type_id), 
+            "week": self.get_amount_per_week(date, type_id), 
+            "month": self.get_amount_per_month(date, type_id), 
+            "year": self.get_amount_per_year(date, type_id)
+        }
+        if not type_of_date and tag:
+            current_transaction = db.session.execute(
+                db.select(Transactions.amount, Transactions.description, Transactions.date, Tags.tag_name)
+                .filter(Transactions.user_id == self.user_id)
+                .filter(Transactions.type_id == type_id).join(Tags).filter(Transactions.tag_id == Tags.id)
+                .filter(Tags.tag_name == tag)
+            )
+            return self.response_data(current_transaction)
 
-    def get_all_expenses(self):
-        current_expenses = db.session.execute(
-            db.select(Transactions, Tags.tag_name)
-            .filter(Transactions.user_id == self.user_id)
-            .filter(Transactions.type_id == 2).join(Tags).filter(Transactions.tag_id == Tags.id)  
-        ).all()
-
-        return [
-            {
-                "amount": expense.amount,
-                "description": expense.description,
-                "category": tag_name,
-                "date": expense.date,
-                "id": expense.id,
-            }
-            for expense, tag_name in current_expenses
-        ]
-        
-    def get_all_expenses_period(self, timespan):
-        current_expenses = db.session.execute(
-            db.select(Transactions)
-            .filter(Transactions.user_id == self.user_id)
-            .filter(Transactions.type_id == 2)  
-        ).scalars().all()
-
-        expenses_by_period = defaultdict(float)
-
-        for expense in current_expenses:
-            expense_date = expense.date
-            period_key = self.get_period_key(expense_date, timespan)  
-
-            expenses_by_period[period_key] += expense.amount
-
-        return [{"period": period, "total": total} for period, total in expenses_by_period.items()]
-
-    def get_period_key(self, date, timespan):
-        """
-        Calcula la clave del período (día, mes, año, etc.) para la fecha del gasto.
-        :param date: Fecha del gasto
-        :param timespan: El período por el que agrupar (día, mes, año, etc.)
-        :return: Clave del período (formato: día, mes, año)
-        """
-        if timespan == "day":
-            return date.strftime('%Y-%m-%d')  
-        elif timespan == "month":
-            return date.strftime('%Y-%m')  
-        elif timespan == "year":
-            return date.strftime('%Y')
-        elif timespan == "half":
-            day = date.day
-            if day <= 15:
-                return f"{date.year}-{date.month:02d}-01-15"
-            else:
-                return f"{date.year}-{date.month:02d}-16-31"
-        return None
+        elif not tag and type_of_date:
+            return dates_transaction[type_of_date]
+        else:
+            if type_of_date == "day":
+                current_transaction = db.session.execute(
+                db.select(
+                    Transactions.amount,
+                    Transactions.description,
+                    Transactions.date,
+                    Tags.tag_name
+                )
+                .filter(Transactions.user_id == self.user_id)
+                .filter(Transactions.date == date)
+                .filter(Transactions.type_id == type_id).join(Tags).filter(Transactions.tag_id == Tags.id)
+                .filter(Tags.tag_name == tag)
+                ).all()
+            elif type_of_date == "week":
+                current_transaction = db.session.execute(
+                db.select(
+                    Transactions.amount,
+                    Transactions.description,
+                    Transactions.date,
+                    Tags.tag_name
+                )
+                .filter(Transactions.user_id == self.user_id)
+                .filter(func.week(Transactions.date) == func.week(date))
+                .filter(Transactions.type_id == type_id).join(Tags).filter(Transactions.tag_id == Tags.id)
+                .filter(Tags.tag_name == tag)
+                ).all()
+            elif type_of_date == "month":
+                current_transaction = db.session.execute(
+                db.select(
+                    Transactions.amount,
+                    Transactions.description,
+                    Transactions.date,
+                    Tags.tag_name
+                )
+                .filter(Transactions.user_id == self.user_id)
+                .filter(func.month(Transactions.date) == func.month(date))
+                .filter(Transactions.type_id == type_id).join(Tags).filter(Transactions.tag_id == Tags.id)
+                .filter(Tags.tag_name == tag)
+                ).all()
+            elif type_of_date == "year":
+                current_transaction = db.session.execute(
+                db.select(
+                    Transactions.amount,
+                    Transactions.description,
+                    Transactions.date,
+                    Tags.tag_name
+                )
+                .filter(Transactions.user_id == self.user_id)
+                .filter(func.year(Transactions.date) == func.year(date))
+                .filter(Transactions.type_id == type_id).join(Tags).filter(Transactions.tag_id == Tags.id)
+                .filter(Tags.tag_name == tag)
+                ).all()
+            return self.response_data(current_transaction)

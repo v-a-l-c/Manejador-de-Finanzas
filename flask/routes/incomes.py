@@ -73,6 +73,18 @@ def get_all_incomes():
     wallet = Wallet(user_id)
 
     try: 
-        return jsonify({"status": "success", "data": wallet.get_all_incomes()}), 201
+        return jsonify({"status": "success", "data": wallet.get_all_transactions(1)}), 201
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@incomes.route('/incomes/search', methods=['GET'])
+def search_transaction():
+    try:
+        data_json = request.get_json()
+        user_id = current_session.get('user_id')
+        current_wallet = Wallet(user_id)
+        return jsonify({"message": "transaction_search_returned", "resource": current_wallet.search_transaction(
+            data_json['date'], data_json['type_of_date'], data_json['tag'], 1)})
+    except Exception as e:
+        return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
