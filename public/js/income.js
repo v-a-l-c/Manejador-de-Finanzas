@@ -6,11 +6,17 @@ incomeForm.addEventListener("submit", async (event) =>{
     const current_amount = document.getElementById("amount").value;
     const current_description = document.getElementById("description").value;
     const current_date = document.getElementById("date").value;
+    const current_tag = document.getElementById("category").value;
     try {
         const response = await fetch("http://172.16.238.10:5000/transactions/incomes", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({amount: current_amount, description: current_description, date: current_date}),
+            body: JSON.stringify({
+                amount: current_amount, 
+                description: current_description, 
+                date: current_date,
+                tag: current_tag 
+            }),
         });
 
         const data = await response.json();
@@ -45,7 +51,7 @@ async function loadIncomes() {
         if (jsonResponse.status === "success" && Array.isArray(jsonResponse.data)) {
             const incomes = jsonResponse.data; 
             populateTable(incomes);
-        } else {
+        }else {
             console.error("No se encontraron ingresos o hubo un error:", jsonResponse.message);
         }
 

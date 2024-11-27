@@ -14,34 +14,21 @@ expenses_bp = Blueprint('expenses_bp', __name__)
 def add_expense():
     try:
         data = request.get_json()
-        
-        if not data or 'amount' not in data or 'description' not in data or 'date' not in data:
+        user_id = current_session.get('user_id')
+
+        if not data or 'amount' not in data or 'description' not in data or 'date' not in data or 'category' not in data:
             return jsonify({"message": "Missing required fields"}), 400
 
-        
-        amount = data.get('amount')
-        description = data.get('description')
-        date = data.get('date')
-        user_id = current_session.get('user_id')
 
         if user_id is None:
             return jsonify({"message": "User not authenticated"}), 401
-
-        new_expense = Transactions(
-            user_id=user_id,
-            type_id=2, 
-            amount=amount,
-            description=description,
-            date=date
-        )
-
-        db.session.add(new_expense)
-        db.session.commit()
-        return jsonify({"response": "Expense_added_successfully"}), 201
+        
+        current_wallet = Wallet(1)
+        current_wallet.insert_amount(data.get('amount'), data.get('description'), data.get('date'), 2, data.get('category'))
+        return jsonify({"message": "expense_saved_successfully", "response": "success"}), 201
 
     except Exception as e:
-        db.session.rollback()
-        return jsonify({"message": "Database error", "error": str(e)}), 500
+        return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
 
 
 @expenses_bp.route('/expenses/day', methods=['POST'])

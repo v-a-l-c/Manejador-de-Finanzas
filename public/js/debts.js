@@ -67,7 +67,7 @@ async function handleFormSubmit(event) {
                 showMessage("Añadido exitosamente");
                 loadExpenses(); 
                 resetForm();    
-            } else {
+            }else {
                 console.error("Error al añadir gasto:", data.message);
                 showMessage("Error al añadir gasto");
             }

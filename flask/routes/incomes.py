@@ -11,11 +11,10 @@ incomes = Blueprint('incomes', __name__)
 @incomes.route('/incomes', methods=['POST'])
 def register_income():
     try:
-
         data_json = request.get_json()
         user_id = current_session.get('user_id')
         current_wallet = Wallet(user_id)
-        current_wallet.insert_amount(data_json.get('amount'), data_json.get('description'), data_json.get('date'))
+        current_wallet.insert_amount(data_json.get('amount'), data_json.get('description'), data_json.get('date'), 1, data_json.get('tag'))
         return jsonify({"message": "income_saved_successfully", "response": "success"}), 201
 
     except Exception as e:
@@ -71,10 +70,9 @@ def get_all_incomes():
     if not user_id:
         return jsonify({"status": "error", "message": "No autenticado"}), 401
 
-    wallet = Wallet(user_id=user_id)
+    wallet = Wallet(user_id)
 
-    try:
-        incomes = wallet.get_all_incomes() 
-        return jsonify({"status": "success", "data": incomes}), 200
+    try: 
+        return jsonify({"status": "success", "data": wallet.get_all_incomes()}), 201
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
