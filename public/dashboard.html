@@ -28,15 +28,19 @@
             <a href="index.html" class="logout">Cerrar sesión</a>
 
             <div class="content-box">
-                <!-- Botones para las gráficas -->
-                <div class="graph-buttons">
-                    <button onclick="getExpenseData('day')" class="load-chart-button">Mostrar Gasto por día</button>
-                    <button onclick="getExpenseData('quincena')" class="load-chart-button">Mostrar Gasto por semana</button>
-                    <button onclick="getExpenseData('month')" class="load-chart-button">Mostrar Gasto por mes</button>
-                    <button onclick="getExpenseData('year')" class="load-chart-button">Mostrar Gasto por año</button>
+                <div class="time-select">
+                    <button id="timeSelectButton">Seleccionar Periodo</button>
+                    <div id="timeMenu" class="time-menu" style="display:none;">
+                        <ul>
+                            <li data-timespan="day">Día</li>
+                            <li data-timespan="week">Semana</li>
+                            <li data-timespan="month">Mes</li>
+                            <li data-timespan="year">Año</li>
+                        </ul>
+                    </div>
                 </div>
+                <button id="graphButton" disabled>Graficar</button>
 
-                <!-- Botones apilados -->
                 <div class="content">
                     <button onclick="location.href='balance.html'" class="card-button">
                         <h2>Saldo</h2>
@@ -57,7 +61,6 @@
                 </div>
             </div>
 
-            <!-- Contenedor del gráfico -->
             <div class="chart-container">
                 <canvas id="myChart" width="400" height="200"></canvas>
                 <div id="no-data-message" style="display:none; text-align:center; color:red;">
@@ -68,8 +71,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="dashboard.js"></script>
+    <script src="js/dashboard.js"></script>
 </body>
 
 </html>
-
