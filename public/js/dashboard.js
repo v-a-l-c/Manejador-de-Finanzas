@@ -58,7 +58,7 @@ async function graphData() {
 
 function processExpenses(expenses, timePeriod) {
     const groupBy = {
-        day: (date) => date.toISOString().split('T')[0], // YYYY-MM-DD
+        day: (date) => date.toISOString().split('T')[0], 
         month: (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`,
         year: (date) => date.getFullYear().toString(),
     };
@@ -132,9 +132,11 @@ function toggleMenu() {
 function setTimespan(timespan) {
     selectedTimespan = timespan;
     document.getElementById('timeSelectButton').innerText = `Periodo seleccionado: ${timespan}`;
-    document.getElementById('graphButton').disabled = false; 
-    toggleMenu(); 
+    document.getElementById('graphButton').disabled = false;
+    document.getElementById('graphIncomesButton').disabled = false; 
+    toggleMenu();
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('timeSelectButton').addEventListener('click', toggleMenu);
@@ -147,5 +149,104 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('graphButton').addEventListener('click', graphData);
 });
 
+document.getElementById('graphIncomesButton').addEventListener('click', graphIncomes);
+
+async function graphIncomes() {
+    if (!selectedTimespan) {
+        alert('Selecciona un periodo antes de graficar');
+        return;
+    }
+
+    const noDataMessage = document.getElementById('no-incomes-data-message');
+    const chartContainer = document.getElementById('incomesChart');
+
+    noDataMessage.style.display = 'none';
+    chartContainer.style.display = 'none';
+
+    try {
+        const baseURL = 'http://172.16.238.10:5000/transactions/incomes/allincomes';
+        const response = await fetch(baseURL, { method: 'GET' });
+
+        if (!response.ok) {
+            throw new Error(`Error al cargar los datos: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const processedData = processIncomes(data.data, selectedTimespan);
+        renderIncomeChart(processedData, selectedTimespan);
+    } catch (error) {
+        console.error('Error:', error.message);
+        noDataMessage.style.display = 'block';
+    } finally {
+        chartContainer.style.display = 'block';
+    }
+}
+
+function processIncomes(incomes, timePeriod) {
+    const groupBy = {
+        day: (date) => date.toISOString().split('T')[0], // YYYY-MM-DD
+        month: (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`,
+        year: (date) => date.getFullYear().toString(),
+    };
+
+    const groupFunc = groupBy[timePeriod];
+    if (!groupFunc) throw new Error('Periodo no soportado');
+
+    const groupedIncomes = {};
+    incomes.forEach((income) => {
+        const date = new Date(income.date);
+        const key = groupFunc(date);
+        groupedIncomes[key] = (groupedIncomes[key] || 0) + income.amount;
+    });
+
+    return Object.entries(groupedIncomes)
+        .map(([key, total]) => ({ period: key, total }))
+        .sort((a, b) => new Date(a.period) - new Date(b.period));
+}
+
+function renderIncomeChart(data, timePeriod) {
+    const ctx = document.getElementById('incomesChart').getContext('2d');
+
+    if (window.incomesChart instanceof Chart) {
+        window.incomesChart.destroy();
+    }
+
+    const labels = data.map(item => item.period);
+    const amounts = data.map(item => item.total);
+
+    window.incomesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: `Ingresos por ${timePeriod}`,
+                    data: amounts,
+                    fill: true,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => `Periodo: ${context.label} - Monto: $${context.raw}`,
+                    },
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { callback: (value) => `$${value}` },
+                },
+            },
+        },
+    });
+}
 
 document.getElementById('graphButton').addEventListener('click', graphData);
