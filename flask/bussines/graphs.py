@@ -1,5 +1,5 @@
-from wallet import Wallet
-class graphs(Wallet):
+from bussines.wallet import Wallet
+class Graph(Wallet):
 
     def __init__(self, user_id):
         self.user_id = user_id

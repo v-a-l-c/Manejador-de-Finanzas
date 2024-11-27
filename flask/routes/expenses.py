@@ -5,7 +5,7 @@ from routes.sessions import current_session
 from bussines.wallet import Wallet
 from models.users import Usuarios
 from sqlalchemy import func
-
+from bussines.graphs import Graph
 
 
 expenses_bp = Blueprint('expenses_bp', __name__)
@@ -187,9 +187,9 @@ def get_all_expensesperiod():
 
     timespan = request.args.get('timespan', 'day')  
     wallet = Wallet(user_id=user_id)
-
+    graph = Graph(user_id=user_id)
     try:
-        expenses = wallet.get_all_expenses_period(timespan)
+        expenses = graph.get_all_expenses_period(timespan)
         return jsonify({"status": "success", "data": expenses}), 200
     except Exception as e:
         print(f"Error interno: {e}")  # Asegúrate de que estos logs aparezcan
