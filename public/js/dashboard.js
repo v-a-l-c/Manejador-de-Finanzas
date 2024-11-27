@@ -1,10 +1,8 @@
-// Imágenes para el fondo
 const images = [
     "FondoDash1.jpg",
     "FondoDash2.jpg",
 ];
 
-// Función para establecer un fondo aleatorio
 function setRandomBackground() {
     const randomImage = images[Math.floor(Math.random() * images.length)];
     const mainContent = document.querySelector('.main-content');
@@ -14,11 +12,25 @@ function setRandomBackground() {
     mainContent.style.backgroundRepeat = 'no-repeat';
 }
 
-// Ejecutar la función al cargar la página
 window.onload = setRandomBackground;
+let selectedTimespan = '';
 
-// Función para obtener los datos de gastos desde la API
-async function getExpenseData(timePeriod) {
+
+
+
+document.querySelectorAll('#timeMenu li').forEach((item) => {
+    item.addEventListener('click', (e) => {
+        const timespan = e.target.dataset.timespan;
+        setTimespan(timespan);
+    });
+});
+
+async function graphData() {
+    if (!selectedTimespan) {
+        alert('Selecciona un periodo antes de graficar');
+        return;
+    }
+
     const noDataMessage = document.getElementById('no-data-message');
     const chartContainer = document.getElementById('myChart');
     
@@ -26,34 +38,16 @@ async function getExpenseData(timePeriod) {
     chartContainer.style.display = 'none';
 
     try {
-        const baseURL = 'http://172.16.238.10:5000/transactions/expenses/aot';
-        const timeMap = {
-            day: 'day',
-            quincena: 'quincena',
-            month: 'month',
-            year: 'year',
-        };
-
-        if (!timeMap[timePeriod]) {
-            throw new Error('Periodo no soportado');
-        }
-
-        const url = `${baseURL}${timeMap[timePeriod]}`;
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ date: new Date().toISOString() }),
-        });
+        const baseURL = 'http://172.16.238.10:5000/transactions/expenses/allexpenses';
+        const response = await fetch(baseURL, { method: 'GET' });
 
         if (!response.ok) {
             throw new Error(`Error al cargar los datos: ${response.status}`);
         }
 
         const data = await response.json();
-        renderChart(data.resource, timePeriod); // Pasar timePeriod para personalizar el gráfico
+        const processedData = processExpenses(data.data, selectedTimespan);
+        renderChart(processedData, selectedTimespan);
     } catch (error) {
         console.error('Error:', error.message);
         noDataMessage.style.display = 'block';
@@ -62,26 +56,47 @@ async function getExpenseData(timePeriod) {
     }
 }
 
-// Función para renderizar el gráfico con Chart.js
+function processExpenses(expenses, timePeriod) {
+    const groupBy = {
+        day: (date) => date.toISOString().split('T')[0], // YYYY-MM-DD
+        month: (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`,
+        year: (date) => date.getFullYear().toString(),
+    };
+
+    const groupFunc = groupBy[timePeriod];
+    if (!groupFunc) throw new Error('Periodo no soportado');
+
+    const groupedExpenses = {};
+    expenses.forEach((expense) => {
+        const date = new Date(expense.date);
+        const key = groupFunc(date);
+        groupedExpenses[key] = (groupedExpenses[key] || 0) + expense.amount;
+    });
+
+    return Object.entries(groupedExpenses)
+        .map(([key, total]) => ({ period: key, total }))
+        .sort((a, b) => new Date(a.period) - new Date(b.period));
+}
+
 function renderChart(data, timePeriod) {
     const ctx = document.getElementById('myChart').getContext('2d');
 
-    // Si no hay datos, usar valores por defecto
-    if (!data || data.length === 0) {
-        data = [{ date: '', amount: 0 }];
+    if (window.myChart instanceof Chart) {
+        window.myChart.destroy();
     }
 
-    const labels = data.map(item => item.date);
-    const amounts = data.map(item => item.amount);
+    const labels = data.map(item => item.period);
+    const amounts = data.map(item => item.total);
 
-    new Chart(ctx, {
-        type: 'bar',
+    window.myChart = new Chart(ctx, {
+        type: 'line',
         data: {
             labels,
             datasets: [
                 {
                     label: `Gastos por ${timePeriod}`,
                     data: amounts,
+                    fill: true,
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1,
@@ -91,20 +106,46 @@ function renderChart(data, timePeriod) {
         options: {
             responsive: true,
             plugins: {
-                legend: {
-                    position: 'top',
-                },
+                legend: { position: 'top' },
                 tooltip: {
                     callbacks: {
-                        label: function (context) {
-                            return `Fecha: ${context.label} - Monto: $${context.raw}`;
-                        },
+                        label: (context) => `Periodo: ${context.label} - Monto: $${context.raw}`,
                     },
                 },
             },
             scales: {
-                y: { beginAtZero: true },
+                y: {
+                    beginAtZero: true,
+                    ticks: { callback: (value) => `$${value}` },
+                },
             },
         },
     });
 }
+
+function toggleMenu() {
+    const menu = document.getElementById('timeMenu');
+    const isVisible = window.getComputedStyle(menu).display !== 'none';
+    menu.style.display = isVisible ? 'none' : 'block';
+}
+
+function setTimespan(timespan) {
+    selectedTimespan = timespan;
+    document.getElementById('timeSelectButton').innerText = `Periodo seleccionado: ${timespan}`;
+    document.getElementById('graphButton').disabled = false; 
+    toggleMenu(); 
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('timeSelectButton').addEventListener('click', toggleMenu);
+    document.querySelectorAll('#timeMenu li').forEach((item) => {
+        item.addEventListener('click', (e) => {
+            const timespan = e.target.dataset.timespan;
+            setTimespan(timespan);
+        });
+    });
+    document.getElementById('graphButton').addEventListener('click', graphData);
+});
+
+
+document.getElementById('graphButton').addEventListener('click', graphData);
