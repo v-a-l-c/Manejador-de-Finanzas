@@ -3,7 +3,7 @@ let isEditing = false;
 let editingIndex = null;
 
 // Buscar en la tabla
-function searchTable() {
+/*function searchTable() {
     const input = document.getElementById("searchInput").value.toLowerCase();
     const rows = document.querySelectorAll("#dataTable tbody tr");
 
@@ -18,7 +18,7 @@ function searchTable() {
 function clearSearch() {
     document.getElementById("searchInput").value = ""; // Limpiar el campo de búsqueda
     renderTable(); // Mostrar todos los datos nuevamente
-}
+}*/
 
 // Añadir nueva categoría
 function addNewCategory() {
@@ -248,6 +248,80 @@ async function deleteIncomeAsync(expenseId) {
   } catch (error) {
       console.error("Error en la solicitud:", error);
   }
+}
+
+function searchTable() {
+    let inputField = document.getElementById("searchInput");
+    let consulta = inputField.value;
+    console.log("Entrada del usuario: " + consulta);
+    searchTableAsync(consulta);
+}
+
+async function searchTableAsync(user_input) {
+    let date = null, tag = null, fe_type = null;
+    if (user_input.includes('date')||user_input.includes('tag')){
+      const parts = user_input.split(',').map(part => part.trim());
+      parts.forEach(part => {
+          if (part.startsWith('date:')) {
+              const feValue = part.split(':')[1].trim();
+              if (feValue.includes('&')) {
+                  const feParts = feValue.split('&');
+                  date = feParts[0].trim();
+                  fe_type = feParts[1].trim();
+              } else {
+                  fe = feValue;
+                  fe_type = null;
+              }
+          } else if (part.startsWith('tag:')) {
+              tag = part.split(':')[1].trim();
+          } else {
+            alert("Error en la búsqueda. Formato: date: xx-xx-xx (&d, &m, &y), tag:xxxx");
+            return;
+          }
+        });
+    } else {
+      alert("Error en la búsqueda. Formato: date: xx-xx-xx (&d, &m, &y), tag:xxxx");
+      return;
+    }
+    const response = await fetch("http://172.16.238.10:5000/transactions/expenses/search", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            date: date,
+            type_of_date: fe_type,
+            tag: tag
+        }),
+    });
+
+    if (!response.ok) {
+        alert("Error en la búsqueda.");
+        return;
+    }
+
+    try {
+        const jsonResponse = await response.json();
+
+        if (jsonResponse.message === "transaction_search_returned") {
+          const resourceArray = Object.values(jsonResponse.resource).map(item => {
+            return {
+                total: item.total || null,
+                amount: item.amount || null,
+                category: item.category || null,
+                date: item.date || null,
+                description: item.description || null
+            };
+          });
+          resourceArray.shift();
+          console.log(resourceArray);
+          populateExpensesTable(resourceArray);
+        } else {
+            console.error("No se encontraron egresos o hubo un error:", jsonResponse.message);
+        }
+
+    } catch (error) {
+        console.error("Error en la solicitud:", error);
+    }
 }
 
 document.addEventListener("DOMContentLoaded", loadExpenses);
