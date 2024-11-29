@@ -214,9 +214,19 @@ async function searchTableAsync(user_input) {
     try {
         const jsonResponse = await response.json();
 
-        if (jsonResponse.status === "success" && Array.isArray(jsonResponse.data)) {
-            const incomes = jsonResponse.data;
-            populateTable(incomes);
+        if (jsonResponse.message === "transaction_search_returned") {
+          const resourceArray = Object.values(jsonResponse.resource).map(item => {
+            return {
+                total: item.total || null,
+                amount: item.amount || null,
+                category: item.category || null,
+                date: item.date || null,
+                description: item.description || null
+            };
+          });
+          resourceArray.shift();
+          console.log(resourceArray);
+          populateTable(resourceArray);
         } else {
             console.error("No se encontraron ingresos o hubo un error:", jsonResponse.message);
         }
