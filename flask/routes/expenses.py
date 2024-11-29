@@ -22,7 +22,7 @@ def add_expense():
 
         if user_id is None:
             return jsonify({"message": "User not authenticated"}), 401
-        
+
         current_wallet = Wallet(1)
         current_wallet.insert_amount(data.get('amount'), data.get('description'), data.get('date'), 2, data.get('category'))
         return jsonify({"message": "expense_saved_successfully", "response": "success"}), 201
@@ -36,13 +36,13 @@ def get_expense_per_day():
     try:
         data_json = request.get_json()
         user_id = current_session.get('user_id')
-        
+
         if user_id is None:
             return jsonify({"message": "User not authenticated"}), 401
 
         current_wallet = Wallet(user_id)
         return jsonify({
-            "message": "expense_per_day_returned", 
+            "message": "expense_per_day_returned",
             "resource": current_wallet.get_amount_per_day(data_json['date'], type_id=2)
         }), 200
 
@@ -55,13 +55,13 @@ def get_expense_per_month():
     try:
         data_json = request.get_json()
         user_id = current_session.get('user_id')
-        
+
         if user_id is None:
             return jsonify({"message": "User not authenticated"}), 401
 
         current_wallet = Wallet(user_id)
         return jsonify({
-            "message": "expense_per_month_returned", 
+            "message": "expense_per_month_returned",
             "resource": current_wallet.get_amount_per_month(data_json['date'], type_id=2)
         }), 200
 
@@ -74,13 +74,13 @@ def get_expense_per_year():
     try:
         data_json = request.get_json()
         user_id = current_session.get('user_id')
-        
+
         if user_id is None:
             return jsonify({"message": "User not authenticated"}), 401
 
         current_wallet = Wallet(user_id)
         return jsonify({
-            "message": "expense_per_year_returned", 
+            "message": "expense_per_year_returned",
             "resource": current_wallet.get_amount_per_year(data_json['date'], type_id=2)
         }), 200
 
@@ -108,7 +108,7 @@ def get_expense_per_day_aot():
     result = [{'date': str(expense.date), 'amount': expense.total_amount} for expense in expenses]
 
     return jsonify({
-        "message": "expense_per_day_returned", 
+        "message": "expense_per_day_returned",
         "resource": result
     }), 200
 
@@ -133,7 +133,7 @@ def get_expense_per_month_aot():
     result = [{'date': str(expense.date), 'amount': expense.total_amount} for expense in expenses]
 
     return jsonify({
-        "message": "expense_per_month_returned", 
+        "message": "expense_per_month_returned",
         "resource": result
     }), 200
 
@@ -159,7 +159,7 @@ def get_expense_per_year_aot():
     result = [{'date': expense.year, 'amount': expense.total_amount} for expense in expenses]
 
     return jsonify({
-        "message": "expense_per_year_returned", 
+        "message": "expense_per_year_returned",
         "resource": result
     }), 200
 
@@ -167,25 +167,25 @@ def get_expense_per_year_aot():
 
 @expenses_bp.route("/expenses/allexpenses", methods=["GET"])
 def get_all_expenses():
-    user_id = current_session.get('user_id')  
+    user_id = current_session.get('user_id')
     if not user_id:
         return jsonify({"status": "error", "message": "No autenticado"}), 401
 
     wallet = Wallet(user_id=user_id)
 
     try:
-        expenses = wallet.get_all_transactions(2) 
+        expenses = wallet.get_all_transactions(2)
         return jsonify({"status": "success", "data": expenses}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @expenses_bp.route("/expenses/allexpensesperiod", methods=["GET"])
 def get_all_expensesperiod():
-    user_id = current_session.get('user_id')  
+    user_id = current_session.get('user_id')
     if not user_id:
         return jsonify({"status": "error", "message": "No autenticado"}), 401
 
-    timespan = request.args.get('timespan', 'day')  
+    timespan = request.args.get('timespan', 'day')
     wallet = Wallet(user_id=user_id)
     graph = Graph(user_id=user_id)
     try:
@@ -205,3 +205,16 @@ def search_transaction():
             data_json['date'], data_json['type_of_date'], data_json['tag'], 2)})
     except Exception as e:
         return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
+
+@expenses_bp.route('/expenses/delete', methods=['DELETE'])
+def delete_transaction():
+    try:
+        data_json = request.get_json()
+        user_id = current_session.get('user_id')
+        transaction_id = data_json.get("id");
+        current_wallet = Wallet(user_id)
+        current_wallet.delete_transaction(transaction_id)
+        return jsonify({"message": "transaction_deleted_successfully", "response": "success"}), 201
+
+    except Exception as e:
+        return jsonify({"message" : "server_not_process_data", "response" : str(e)}), 400
