@@ -6,7 +6,7 @@ incomes = Blueprint('incomes', __name__)
 
 
 # Define incomes API route.
-# Recieve a data_json with the next keys; amount, description, date and create a current 
+# Recieve a data_json with the next keys; amount, description, date and create a current
 # wallet where the instance recieve a user_id current session.
 @incomes.route('/incomes', methods=['POST'])
 def register_income():
@@ -21,7 +21,7 @@ def register_income():
         return jsonify({"message" : "server_not_process_data", "response" : str(e)}), 400
 
 # Define incomes API amount per-day route.
-# Recieve a data_json with the next keys; date. it ensures the current session through user_id 
+# Recieve a data_json with the next keys; date. it ensures the current session through user_id
 # hash table reference, therefore it will do current wallet instance.
 @incomes.route('/incomes/per-day', methods=['GET'])
 def get_amount_per_day():
@@ -36,7 +36,7 @@ def get_amount_per_day():
 
 @incomes.route('/incomes/per-month', methods=['GET'])
 def get_amount_per_month():
-    try: 
+    try:
         data_json = request.get_json()
         user_id = current_session.get('user_id')
         current_wallet = Wallet(user_id)
@@ -66,13 +66,13 @@ def get_amount_per_week():
 
 @incomes.route("/incomes/allincomes", methods=["GET"])
 def get_all_incomes():
-    user_id = current_session.get('user_id')  
+    user_id = current_session.get('user_id')
     if not user_id:
         return jsonify({"status": "error", "message": "No autenticado"}), 401
 
     wallet = Wallet(user_id)
 
-    try: 
+    try:
         return jsonify({"status": "success", "data": wallet.get_all_transactions(1)}), 201
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -88,3 +88,16 @@ def search_transaction():
             data_json['date'], data_json['type_of_date'], data_json['tag'], 1)})
     except Exception as e:
         return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
+
+@incomes.route('/incomes/delete', methods=['DELETE'])
+def delete_transaction():
+    try:
+        data_json = request.get_json()
+        user_id = current_session.get('user_id')
+        transaction_id = data_json.get("id");
+        current_wallet = Wallet(user_id)
+        current_wallet.delete_transaction(transaction_id)
+        return jsonify({"message": "transaction_deleted_successfully", "response": "success"}), 201
+
+    except Exception as e:
+        return jsonify({"message" : "server_not_process_data", "response" : str(e)}), 400
