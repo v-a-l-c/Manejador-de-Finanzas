@@ -78,7 +78,7 @@ def get_all_incomes():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
-@incomes.route('/incomes/search', methods=['GET'])
+@incomes.route('/incomes/search', methods=['POST'])
 def search_transaction():
     try:
         data_json = request.get_json()
