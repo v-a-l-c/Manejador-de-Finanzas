@@ -192,7 +192,7 @@ def get_all_expensesperiod():
         expenses = graph.get_all_expenses_period(timespan)
         return jsonify({"status": "success", "data": expenses}), 200
     except Exception as e:
-        print(f"Error interno: {e}")  # Asegúrate de que estos logs aparezcan
+        print(f"Error interno: {e}")  
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @expenses_bp.route('/expenses/search', methods=['POST'])
