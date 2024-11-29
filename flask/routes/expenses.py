@@ -195,7 +195,7 @@ def get_all_expensesperiod():
         print(f"Error interno: {e}")  # Asegúrate de que estos logs aparezcan
         return jsonify({"status": "error", "message": str(e)}), 500
 
-@expenses_bp.route('/expenses/search', methods=['GET'])
+@expenses_bp.route('/expenses/search', methods=['POST'])
 def search_transaction():
     try:
         data_json = request.get_json()
