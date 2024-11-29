@@ -17,7 +17,7 @@ class Wallet:
         current_tag = Tags.query.filter(Tags.tag_name==tag).scalar()
         new_tag = current_tag or Tags(tag_name=tag)
         db.session.add(new_tag)
-        db.session.commit()  
+        db.session.commit()
         new_transaction = Transactions(
             user_id=self.user_id,
             type_id=type_id,
@@ -28,7 +28,14 @@ class Wallet:
         )
         db.session.add(new_transaction)
         db.session.commit()
-    
+
+    def delete_transaction(self, transaction_id):
+        transaction_to_delete = Transactions.query.filter(
+            Transactions.id == transaction_id,
+        ).first()
+        db.session.delete(transaction_to_delete)
+        db.session.commit()
+
     def response_data(self, current_amount):
         show_data = {}
         cont = 1
@@ -67,7 +74,7 @@ class Wallet:
             .filter(Transactions.type_id == type_id).join(Tags).filter(Transactions.tag_id == Tags.id)
         )
         return self.response_data(current_amount)
-    
+
     def get_amount_per_week(self, date, type_id):
         current_amount = db.session.execute(
             db.select(Usuarios, Transactions.amount, Transactions.description, Transactions.date, Tags.tag_name)
@@ -96,9 +103,9 @@ class Wallet:
         ]
     def search_transaction(self, date, type_of_date, tag, type_id):
         dates_transaction = {
-            "day": self.get_amount_per_day(date, type_id), 
-            "week": self.get_amount_per_week(date, type_id), 
-            "month": self.get_amount_per_month(date, type_id), 
+            "day": self.get_amount_per_day(date, type_id),
+            "week": self.get_amount_per_week(date, type_id),
+            "month": self.get_amount_per_month(date, type_id),
             "year": self.get_amount_per_year(date, type_id)
         }
         if not type_of_date and tag:

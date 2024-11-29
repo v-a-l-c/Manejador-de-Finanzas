@@ -16,7 +16,7 @@ def create_app():
     app.secret_key = "epicomomentogamer"
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://user:userpassword@mysql/mydatabase'
 
-    CORS(app, resources={r"/transactions/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"], "supports_credentials": True}})
+    CORS(app, resources={r"/transactions/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS", "DELETE"], "supports_credentials": True}})
     CORS(app, resources={r"/auth/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS", "PUT"], "supports_credentials": True}})
 
 
@@ -43,7 +43,7 @@ def create_app():
     from routes.expenses import expenses_bp
 
 
-    
+
 
     with app.app_context():
         db.create_all()
@@ -72,4 +72,3 @@ def create_app():
 if __name__ == '__main__':
     app = create_app()
     app.run(host='0.0.0.0', port=5000, debug=True)
-
