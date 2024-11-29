@@ -65,8 +65,8 @@ async function handleFormSubmit(event) {
             if (response.ok) {
                 console.log("Gasto añadido:", data);
                 showMessage("Añadido exitosamente");
-                loadExpenses(); 
-                resetForm();    
+                loadExpenses();
+                resetForm();
             }else {
                 console.error("Error al añadir gasto:", data.message);
                 showMessage("Error al añadir gasto");
@@ -207,7 +207,47 @@ function populateExpensesTable(expenses) {
 
         dataTableBody.appendChild(row);
     });
+    const deleteButtons = document.querySelectorAll(".delete-button");
+    deleteButtons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+            const expenseId = event.target.getAttribute("data-id");
+            console.log("se llamará a delete");
+            deleteExpense(expenseId);
+        });
+    });
 }
 
+function deleteExpense(expenseId) {
+  console.log("se llamó a delete");
+  deleteIncomeAsync(expenseId);
+}
+
+async function deleteIncomeAsync(expenseId) {
+  const response = await fetch("http://172.16.238.10:5000/transactions/expenses/delete", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+          id: expenseId,
+      }),
+  });
+
+  if (!response.ok) {
+      alert("Ocurrió un problema al eliminar el egreso");
+      return;
+  }
+
+  try {
+      const jsonResponse = await response.json();
+
+      if (jsonResponse.response === "success") {
+          loadExpenses();
+      } else {
+          console.error("Hubo un error:", jsonResponse.message);
+      }
+
+  } catch (error) {
+      console.error("Error en la solicitud:", error);
+  }
+}
 
 document.addEventListener("DOMContentLoaded", loadExpenses);
