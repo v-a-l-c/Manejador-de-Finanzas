@@ -5,6 +5,7 @@ const categorySelect = document.getElementById("category");
 const newCategoryContainer = document.getElementById("newCategoryContainer");
 const newCategoryInput = document.getElementById("newCategory");
 
+
 categorySelect.addEventListener("change", () => {
     if (categorySelect.value === "add-new") {
         newCategoryContainer.style.display = "block";
@@ -15,12 +16,12 @@ categorySelect.addEventListener("change", () => {
     }
 });
 
-function addNewCategory() {
-    const newCategoryValue = newCategoryInput.value.trim();
+const addNewCategory = () => {
+    const newCategoryValue = newCategoryInput.value.trim(); 
     if (newCategoryValue) {
         const newOption = document.createElement("option");
-        newOption.value = newCategoryValue.toUpperCase();
-        newOption.textContent = newCategoryValue;
+        newOption.value = newCategoryValue;
+        newOption.textContent = newCategoryValue.toUpperCase();
 
         categorySelect.appendChild(newOption);
         categorySelect.value = newCategoryValue.toUpperCase();
@@ -71,10 +72,6 @@ function showMessage(message) {
     successMessage.style.display = "block";
     setTimeout(() => successMessage.style.display = "none", 2000); // Ocultar mensaje después de 2 segundos
 }
-
-
-
-
 
 async function loadIncomes() {
     const response = await fetch("http://172.16.238.10:5000/transactions/incomes/allincomes", {
@@ -179,9 +176,10 @@ function searchTable() {
     searchTableAsync(consulta);
 }
 
+
 async function searchTableAsync(user_input) {
     let date = null, tag = null, fe_type = null;
-    if (user_input.includes('date')||user_input.includes('tag')){
+    if (user_input.includes('date')|| user_input.includes('tag')){
       const parts = user_input.split(',').map(part => part.trim());
       parts.forEach(part => {
           if (part.startsWith('date:')) {
@@ -215,7 +213,7 @@ async function searchTableAsync(user_input) {
             tag: tag
         }),
     });
-
+    console.log(response);
     if (!response.ok) {
         alert("Error en la búsqueda.");
         return;
