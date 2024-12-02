@@ -29,6 +29,7 @@ def pop_debt():
         data_json = request.get_json()
         debt_account = get_current_debtAcc()
         debt_account.pop_debt(data_json['id'])
+        return jsonify({"message": "success debt deleted and transfered to expenses section", "response": "success"}), 201
     except Exception as e:
         return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
 

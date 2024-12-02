@@ -27,17 +27,16 @@ class DebtAccount:
         db.session.commit()
 
     def pop_debt(self, debt_id):
-        stmt = db.delete(Debts).where(Debts.id == debt_id).scalar()
-        if stmt:
-            db.session.execute(stmt)
-            db.session.commit()
-            transaction = Transactions.query.filter(Transactions.user_id == self.user_id)
-            transaction.type_id = 2
-            db.session.commit()
+        db.session.execute(
+            db.update(Transactions)
+            .where(Transactions.user_id == self.user_id).where(Transactions.id == Debts.transaction_id).where(Debts.id == debt_id).values(type_id= 2))
+        db.session.commit()
+        Debts.query.filter(Debts.id == debt_id).delete()
+        db.session.commit()
 
     def date_status(self):
         pass
-    
+    #func to calcute amount with the interest, default by month
     def calc_interest(self):
         pass
 
