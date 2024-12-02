@@ -50,7 +50,7 @@ def delete_transaction():
     try:
         data_json = request.get_json()
         user_id = current_session.get('user_id')
-        transaction_id = data_json.get("id");
+        transaction_id = data_json.get("id")
         current_wallet = Wallet(user_id)
         current_wallet.delete_transaction(transaction_id)
         return jsonify({"message": "transaction_deleted_successfully", "response": "success"}), 201
