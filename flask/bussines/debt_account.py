@@ -40,3 +40,6 @@ class DebtAccount:
 
     def send_end_date(self):
         pass
+    
+    def get_all_debts(self, type_id):
+        return self.wallet.get_all_transactions(type_id)
