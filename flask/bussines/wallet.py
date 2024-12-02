@@ -28,6 +28,7 @@ class Wallet:
         )
         db.session.add(new_transaction)
         db.session.commit()
+        return new_transaction.id
 
     def delete_transaction(self, transaction_id):
         transaction_to_delete = Transactions.query.filter(

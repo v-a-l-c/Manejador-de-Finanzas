@@ -1,4 +1,4 @@
-from flask import request, Blueprint, jsonify, redirect, url_for
+from flask import request, Blueprint, jsonify
 from routes.sessions import current_session
 from bussines.wallet import Wallet
 
@@ -43,7 +43,7 @@ def search_transaction():
         return jsonify({"message": "transaction_search_returned", "resource": current_wallet.search_transaction(
         data_json['date'], data_json['type_of_date'], data_json['tag'], 1)})
     except Exception as e:
-    return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
+        return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
 
 @incomes.route('/incomes/delete', methods=['DELETE'])
 def delete_transaction():

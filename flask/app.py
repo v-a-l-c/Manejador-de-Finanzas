@@ -41,7 +41,7 @@ def create_app():
     from routes.incomes import incomes
     from routes.confirm_email import confirm_email_bp
     from routes.expenses import expenses_bp
-
+    from routes.debts_route import debt
 
 
 
@@ -55,7 +55,7 @@ def create_app():
     app.register_blueprint(login_route, url_prefix='/auth')
     app.register_blueprint(incomes, url_prefix= '/transactions')
     app.register_blueprint(expenses_bp, url_prefix= '/transactions')
-
+    app.register_blueprint(debt, url_prefix='/transactions')
     app.register_blueprint(confirm_email_bp, url_prefix='/confirm')
 
 
