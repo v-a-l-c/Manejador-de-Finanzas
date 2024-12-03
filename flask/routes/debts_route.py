@@ -35,7 +35,15 @@ def pop_debt():
 
 @debt.route('/debt/interest', methods=['GET'])
 def calc_interest():
-    pass
+    try:
+        user_id = current_session.get('user_id')
+        if not user_id:
+            return jsonify({"status": "error", "message": "No autenticado"}), 401
+        data_json = request.get_json()
+        debt_account = get_current_debtAcc()
+        return jsonify({"message": "server_calc_debts", "resource": debt_account.calc_interest(data_json['id'])}), 201
+    except Exception as e:
+        return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
 
 @debt.route('/debt/all-debts', methods=['GET'])
 def get_all_debts():

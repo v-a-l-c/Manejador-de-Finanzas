@@ -4,6 +4,7 @@ from models.interests import Interests
 from models.transactions import Transactions
 from models.tags import Tags
 from models import db
+from datetime import datetime, time, date
 
 class DebtAccount:
 
@@ -25,6 +26,51 @@ class DebtAccount:
         )
         db.session.add(new_debt)
         db.session.commit()
+    
+    def calc_payments(self, current_interest, amount, date):
+        show_calcs = {}
+        month_position = {
+            1: "01", 2: "02", 3: "03",
+            4: "04", 5: "05", 6: "06", 7: "07",
+            8: "08", 9: "09", 10: "10",
+            11: "11", 12: "12" 
+        }
+        cont = 1
+        current_date = date.today()
+        between_months = (date.year - current_date.year)*12 + date.month - current_date.month 
+        amount_total = (float(current_interest)*float(amount)) + float(amount)
+        amount = float(amount_total/between_months)
+        current_month = current_date.month + 1
+        current_year = current_date.year
+
+        for month in range(1, between_months + 1):
+
+            if current_month > 12:
+                current_month = 1
+                current_year += 1
+
+            show_calcs[cont] = {
+                "date": str(current_year) +"-"+ month_position[current_month]+"-"+str(date.day),
+                "calc_amount": round(amount, 2)
+            }
+            current_month += 1
+            cont +=1
+        show_calcs[cont + 1] = {"total_to_pay": round(amount_total, 2)}
+        return show_calcs
+
+    def response_data(self, stmt_query_debt):
+        show_data = {}
+        cont = 1
+        for row in stmt_query_debt:
+            show_data[cont] = {
+                "amount": row.amount, 
+                "interest": row.percent, 
+                "creditor": row.creditor,
+                "end_of_date": row.date,
+                "payments": self.calc_payments(row.percent, row.amount, row.date)}
+            cont += 1
+        return show_data
+
 
     def pop_debt(self, debt_id):
         db.session.execute(
@@ -36,9 +82,13 @@ class DebtAccount:
 
     def date_status(self):
         pass
+
     #func to calcute amount with the interest, default by month
-    def calc_interest(self):
-        pass
+    def calc_interest(self, debt_id):
+        creditor_interest_value = db.session.execute(db.select(Debts.creditor, Transactions.amount, Transactions.date, Interests.percent)
+        .join(Debts, Debts.interest_id ==  Interests.id).join(Transactions, Debts.transaction_id == Transactions.id)
+        .where(Debts.id == debt_id)).all()
+        return self.response_data(creditor_interest_value)
 
     def send_end_date(self):
         pass
