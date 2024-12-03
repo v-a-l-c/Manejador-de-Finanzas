@@ -9,7 +9,7 @@ debt = Blueprint('debt', __name__)
 def get_current_debtAcc():
     user_id = current_session.get('user_id')
     current_wallet = Wallet(user_id)
-    return DebtAccount(user_id, current_wallet)
+    return DebtAccount(current_wallet)
 
 @debt.route('/debt', methods=['POST'])
 def register_debt():
@@ -53,5 +53,17 @@ def get_all_debts():
             return jsonify({"status": "error", "message": "No autenticado"}), 401
         debt_account = get_current_debtAcc()
         return jsonify({"message": "success_debts_returned", "resource": debt_account.get_all_debts(3)}), 201
+    except Exception as e:
+        return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
+
+@debt.route('/debt/remind-debts', methods=['GET'])
+def remind_record_debt():
+    try:
+        user_id = current_session.get('user_id')
+        if not user_id:
+            return jsonify({"status": "error", "message": "No autenticado"}), 401
+        data_json = request.get_json()
+        debt_account = get_current_debtAcc()
+        return jsonify({"message": "server_sent_record", "resource": debt_account.date_status(data_json['id'])}), 201
     except Exception as e:
         return jsonify({"message": "server_not_process_data", "response": str(e)}), 500

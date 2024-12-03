@@ -13,6 +13,9 @@ class Wallet:
     def __init__(self, user_id):
         self.user_id = user_id
 
+    def get_wallet_id(self):
+        return self.user_id
+        
     def insert_amount(self, amount, description, date, type_id, tag):
         current_tag = Tags.query.filter(Tags.tag_name==tag).scalar()
         new_tag = current_tag or Tags(tag_name=tag)

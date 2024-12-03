@@ -8,8 +8,7 @@ from datetime import datetime, time, date
 
 class DebtAccount:
 
-    def __init__(self, user_id, wallet):
-        self.user_id = user_id
+    def __init__(self, wallet):
         self.wallet = wallet
 
     def register_debt(self, creditor, amount, description, date, type_id, tag, interest):
@@ -26,6 +25,7 @@ class DebtAccount:
         )
         db.session.add(new_debt)
         db.session.commit()
+        self.update_amount(new_debt.id)
     
     def calc_payments(self, current_interest, amount, date):
         show_calcs = {}
@@ -75,13 +75,23 @@ class DebtAccount:
     def pop_debt(self, debt_id):
         db.session.execute(
             db.update(Transactions)
-            .where(Transactions.user_id == self.user_id).where(Transactions.id == Debts.transaction_id).where(Debts.id == debt_id).values(type_id= 2))
+            .where(Transactions.user_id == self.wallet.get_wallet_id()).where(Transactions.id == Debts.transaction_id).where(Debts.id == debt_id).values(type_id= 2))
         db.session.commit()
         Debts.query.filter(Debts.id == debt_id).delete()
         db.session.commit()
 
-    def date_status(self):
-        pass
+    #remind me whom i will pay
+    def date_status(self, debt_id):
+        show_data = {}
+        stmt_record = db.session.execute(db.select(Debts.creditor, Transactions.amount)
+        .join(Transactions, Debts.transaction_id == Transactions.id)
+        .where(Transactions.user_id == self.wallet.get_wallet_id()).where(Debts.id == debt_id)).all()
+        for row in stmt_record:
+            show_data = {
+                "creditor": row.creditor,
+                "amount_to_pay": row.amount
+            }
+        return show_data
 
     #func to calcute amount with the interest, default by month
     def calc_interest(self, debt_id):
@@ -90,13 +100,37 @@ class DebtAccount:
         .where(Debts.id == debt_id)).all()
         return self.response_data(creditor_interest_value)
 
-    def send_end_date(self):
-        pass
-    
+    def update_amount(self, debt_id):
+        new_amount = 0
+        interest = 0
+        stmt_query = db.session.execute(
+            db.select(Transactions.amount, Interests.percent)
+            .join(Debts, Debts.transaction_id == Transactions.id)
+            .join(Interests, Debts.interest_id == Interests.id)
+            .where(Transactions.user_id == self.wallet.get_wallet_id())
+            .where(Debts.id == debt_id)
+        )
+        for row in stmt_query:
+            interest = row.percent
+            new_amount = row.amount
+
+        new_amount = float(new_amount)*float(interest) + float(new_amount)
+        new_amount = round(new_amount, 2)
+        self.update_amount_interest(new_amount, debt_id)
+            
+
+    def update_amount_interest(self, new_amount, debt_id):
+        db.session.execute(
+            db.update(Transactions).where(Transactions.user_id == self.wallet.get_wallet_id()).where(Transactions.id == Debts.transaction_id)
+            .where(Debts.id == debt_id)
+            .values(amount=new_amount)
+        )
+        db.session.commit()
+
     def get_all_debts(self, type_id):
         current_transactions = db.session.execute(
             db.select(Debts, Transactions.amount, Transactions.description, Transactions.date, Tags.tag_name)
-            .filter(Transactions.user_id == self.user_id)
+            .filter(Transactions.user_id == self.wallet.get_wallet_id())
             .filter(Transactions.type_id == type_id).join(Transactions, Debts.transaction_id == Transactions.id).join(Tags, Transactions.tag_id == Tags.id)
         ).all()
 
