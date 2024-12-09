@@ -21,7 +21,7 @@ class Mail:
         message['To'] = self.reciever
         message['Subject'] = subject
 
-        message.attach(MIMEText(body, 'plain'))
+        message.attach(MIMEText(body, 'html'))
         server.sendmail(self.sender, self.reciever, message.as_string())
 
         server.quit()
