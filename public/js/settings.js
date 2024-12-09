@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (newUsername === confirmUsername) {
             try {
-                const response = await fetch("/auth/update_username", {
+                const response = await fetch("http://172.16.238.10:5000/update/update_username", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ username: newUsername }),
@@ -36,13 +36,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (newEmail === confirmEmail) {
             try {
-                const response = await fetch("/auth/update_email", {
+                const response = await fetch("http://172.16.238.10:5000/update/update_email", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email: newEmail }),
+                    body: JSON.stringify({ mail: newEmail }),
                 });
 
-                if (response.ok) alert("Correo actualizado");
+                if (response.ok) alert("Correo actualizado, nuevo correo de verificacion enviado");
                 else alert("Error al actualizar correo.");
             } catch (error) {
                 console.error(error);
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (newPassword === confirmPassword) {
             try {
-                const response = await fetch("/auth/update_password", {
+                const response = await fetch("http://172.16.238.10:5000/update/update_password", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ password: newPassword }),

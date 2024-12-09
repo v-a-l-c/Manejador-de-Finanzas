@@ -1,13 +1,18 @@
 from models.users import Usuarios 
 from models import db  
-from flask import jsonify, Blueprint, session, request
+from flask import Flask, jsonify, Blueprint, session, request, url_for
 from routes.sessions import current_session
+from bussines import Mail
+from itsdangerous import URLSafeTimedSerializer
 
-update = Blueprint('update', __name__)
+
+
+update_bp = Blueprint('update', __name__)
+serializer = URLSafeTimedSerializer('clave-secreta-para-tokens')
 
 ## Rutas de actualización de datos. Hecho por el Front pa##
 # Nombre de usuario
-@update.route('/update_username', methods=['PUT'])
+@update_bp.route('/update_username', methods=['PUT'])
 def update_username():
 
     data = request.get_json()
@@ -23,22 +28,54 @@ def update_username():
     return jsonify({"error": "user_not_found"}), 400
 
 
-@update.route('/update_mail', methods=['PUT'])
+@update_bp.route('/update_email', methods=['PUT'])
 def update_mail():
+    try:
+        data = request.get_json()  
+    except Exception as e:
+        logging.error(f"Invalid data format: {str(e)}")
+        return jsonify({"message": "Invalid data format", "error": str(e)}), 400
 
-    data = request.get_json()
     new_mail = data.get("mail")
     user_id = current_session.get('user_id')
-    user = Usuarios.query.get(user_id)
-    
-    if user:
-        user.set_mail(new_mail)
-        db.session.commit()
-        return({"message": "success_update_mail"}), 201
-    
-    return jsonify({"error": "no_user_found "}), 400
 
-@update.route('/update_password', methods=['PUT'])
+    if not user_id or not new_mail:
+        logging.error(f"Missing user_id or new mail. user_id: {user_id}, new_mail: {new_mail}")
+        return jsonify({"message": "Missing user_id or new mail"}), 400
+
+    user = Usuarios.query.get(user_id)
+
+    if not user:
+        logging.error(f"User not found. user_id: {user_id}")
+        return jsonify({"message": "User not found"}), 404
+
+    try:
+        user.mail = new_mail
+        user.authenticated = False
+        db.session.commit()
+
+        token = serializer.dumps(new_mail, salt='email-confirm')
+        confirm_url = url_for('confirm_email.confirm_email', token=token, _external=True)
+
+        subject = "Confirm your new email"
+        body = f"""
+        <p>Hi {user.username},</p>
+        <p>You have updated your email. Please click the link below to confirm your new email address:</p>
+        <p><a href="{confirm_url}">Confirm Email</a></p>
+        <p>This link will expire in 1 hour.</p>
+        """
+
+        mail_service = Mail(sender='monkeymyp@gmail.com', reciever=new_mail)
+        mail_service.send_mail(subject, body)
+
+        return jsonify({"message": "Email updated and confirmation email sent"}), 200
+
+    except Exception as e:
+        return jsonify({"error": "Failed to update email or send confirmation", "details": str(e)}), 500
+
+
+
+@update_bp.route('/update_password', methods=['PUT'])
 def update_password():
 
     data = request.get_json()
@@ -65,7 +102,7 @@ def is_rfc_correct(rfc):
     return True
 
 
-@update.route('/update_rfc', methods=['PUT'])
+@update_bp.route('/update_rfc', methods=['PUT'])
 def update_rfc():
     data = request.get_json()
     rfc = data.get('RFC')
@@ -84,7 +121,7 @@ def is_curp_correct(curp):
     return True
     
 
-@update.route('/update_curp', methods=['PUT'])
+@update_bp.route('/update_curp', methods=['PUT'])
 def update_curp():
     data = request.get_json()
     curp = data.get('CURP')
@@ -96,7 +133,7 @@ def update_curp():
         return jsonify({"message" : "curp_uploaded"}), 201
     return jsonify({"message": "invalid_curp_no_saved"}), 401
 
-@update.route('/update_name', methods=['PUT'])
+@update_bp.route('/update_name', methods=['PUT'])
 def update_name():
     data = request.get_json()
     name = data.get('name')
@@ -109,7 +146,7 @@ def update_name():
         
     return jsonify({"message": "invalid_name_no_saved"}), 401
 
-@update.route('/update_last_name', methods=['PUT'])
+@update_bp.route('/update_last_name', methods=['PUT'])
 def update_last_name():
     data =request.get_json()
     last_names = data.get('last_names')

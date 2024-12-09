@@ -6,6 +6,8 @@ from models import db
 from models.users import Usuarios
 from models.types import initialize_types
 from itsdangerous import URLSafeTimedSerializer
+import logging
+
 
 
 def create_app():
@@ -17,6 +19,8 @@ def create_app():
     CORS(app, resources={r"/transactions/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS", "DELETE"], "supports_credentials": True}})
     CORS(app, resources={r"/auth/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS", "PUT"], "supports_credentials": True}})
     CORS(app, resources={r"/reports/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS", "PUT"], "supports_credentials": True}})
+    CORS(app, resources={r"/update/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS", "PUT"], "supports_credentials": True}})
+
 
     app.config['MAIL_PASSWORD'] = 'rnsc bogy cbsk rqfz'
 
@@ -27,7 +31,7 @@ def create_app():
     from routes.signup import signup_bp
     from routes.signout import signout_bp
     from routes.login import login_route
-    from routes.update import update
+    from routes.update import update_bp
     from routes.incomes import incomes
     from routes.confirm_email import confirm_email_bp
     from routes.expenses import expenses_bp
@@ -40,7 +44,7 @@ def create_app():
         db.create_all()
         initialize_types()
 
-    app.register_blueprint(update, url_prefix='/auth')
+    app.register_blueprint(update_bp, url_prefix='/update')
     app.register_blueprint(signup_bp, url_prefix='/auth')
     app.register_blueprint(signout_bp, url_prefix='/auth')
     app.register_blueprint(login_route, url_prefix='/auth')
