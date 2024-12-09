@@ -437,15 +437,27 @@ function darkenColor(color, amount) {
 
 document.addEventListener('DOMContentLoaded', function () {
     console.log('DOM completamente cargado');
+    
+    selectedTimespan = 'day'; 
+    document.getElementById('timeSelectButton').innerText = `Periodo seleccionado: ${selectedTimespan}`;
+    
+    graphData();
+    graphIncomes();
 
-    console.log('Elemento incomePieChart:', document.getElementById('incomePieChart'));
-    console.log('Elemento expensePieChart:', document.getElementById('expensePieChart'));
-    console.log('Elemento noDataMessageExpenses:', document.getElementById('noDataMessageExpenses'));
-    console.log('Elemento noDataMessageIncomes:', document.getElementById('noDataMessageIncomes'));
+    document.getElementById('timeSelectButton').addEventListener('click', toggleMenu);
+    document.querySelectorAll('#timeMenu li').forEach((item) => {
+        item.addEventListener('click', (e) => {
+            const timespan = e.target.dataset.timespan;
+            setTimespan(timespan);
+        });
+    });
+    document.getElementById('graphButton').addEventListener('click', graphData);
+    document.getElementById('graphIncomesButton').addEventListener('click', graphIncomes);
 
     loadExpenseChart();
     loadIncomePieChart();
 });
+
 
 
 
