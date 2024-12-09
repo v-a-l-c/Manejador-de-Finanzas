@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     body: JSON.stringify({ mail: newEmail }),
                 });
 
-                if (response.ok) alert("Correo actualizado");
+                if (response.ok) alert("Correo actualizado, nuevo correo de verificacion enviado");
                 else alert("Error al actualizar correo.");
             } catch (error) {
                 console.error(error);

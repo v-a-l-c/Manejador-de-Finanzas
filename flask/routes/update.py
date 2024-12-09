@@ -31,7 +31,7 @@ def update_username():
 @update_bp.route('/update_email', methods=['PUT'])
 def update_mail():
     try:
-        data = request.get_json()  # Obtener datos de la solicitud
+        data = request.get_json()  
     except Exception as e:
         logging.error(f"Invalid data format: {str(e)}")
         return jsonify({"message": "Invalid data format", "error": str(e)}), 400
@@ -50,16 +50,13 @@ def update_mail():
         return jsonify({"message": "User not found"}), 404
 
     try:
-        # Actualizar correo y desactivar autenticación
         user.mail = new_mail
         user.authenticated = False
         db.session.commit()
 
-        # Generar el token de confirmación
         token = serializer.dumps(new_mail, salt='email-confirm')
         confirm_url = url_for('confirm_email.confirm_email', token=token, _external=True)
 
-        # Preparar el contenido del correo
         subject = "Confirm your new email"
         body = f"""
         <p>Hi {user.username},</p>
@@ -68,7 +65,6 @@ def update_mail():
         <p>This link will expire in 1 hour.</p>
         """
 
-        # Enviar el correo de confirmación
         mail_service = Mail(sender='monkeymyp@gmail.com', reciever=new_mail)
         mail_service.send_mail(subject, body)
 
