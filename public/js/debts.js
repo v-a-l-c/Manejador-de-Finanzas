@@ -293,7 +293,6 @@ async function searchTableAsync(user_input) {
             tag: tag
         }),
     });
-
     if (!response.ok) {
         alert("Error en la búsqueda.");
         return;

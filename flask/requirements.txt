@@ -5,3 +5,6 @@ pymysql
 flask-restful
 Flask-Mail
 datetime
+pdfkit
+jinja2
+reportlab
