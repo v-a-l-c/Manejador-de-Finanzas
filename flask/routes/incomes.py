@@ -1,6 +1,7 @@
 from flask import request, Blueprint, jsonify
 from routes.sessions import current_session
 from bussines.wallet import Wallet
+from bussines.pdf_report import PDFreport
 
 incomes = Blueprint('incomes', __name__)
 
@@ -54,6 +55,18 @@ def delete_transaction():
         current_wallet = Wallet(user_id)
         current_wallet.delete_transaction(transaction_id)
         return jsonify({"message": "transaction_deleted_successfully", "response": "success"}), 201
+
+    except Exception as e:
+        return jsonify({"message" : "server_not_process_data", "response" : str(e)}), 400
+
+@incomes.route('/incomes/pdf', methods=['GET'])
+def generate_pdf():
+    try:
+        user_id = current_session.get('user_id')
+        current_wallet = Wallet(user_id)
+        reporte = PDFreport(pdf_wallet)
+        reporte.generate_pdf()
+        return jsonify({"status": "success", "response": "success"}), 201
 
     except Exception as e:
         return jsonify({"message" : "server_not_process_data", "response" : str(e)}), 400
