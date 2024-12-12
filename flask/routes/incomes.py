@@ -1,6 +1,7 @@
-from flask import request, Blueprint, jsonify
+from flask import request, Blueprint, jsonify, Response
 from routes.sessions import current_session
 from bussines.wallet import Wallet
+from bussines.pdf_report import PDFreport
 
 incomes = Blueprint('incomes', __name__)
 
@@ -57,3 +58,17 @@ def delete_transaction():
 
     except Exception as e:
         return jsonify({"message" : "server_not_process_data", "response" : str(e)}), 400
+
+@incomes.route('/incomes/pdf', methods=['GET'])
+def generate_pdf():
+    try:
+        user_id = current_session.get('user_id')
+        current_wallet = Wallet(user_id)
+        reporte = PDFreport(current_wallet)
+        pdf_output = reporte.output(dest='S').encode('latin1')
+        return Response(pdf_output, mimetype='application/pdf', headers={
+            "Content-Disposition": "inline; filename=report.pdf"
+        })
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500

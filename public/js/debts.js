@@ -323,4 +323,24 @@ async function searchTableAsync(user_input) {
     }
 }
 
+function generarpdf(){
+  generarAsync();
+}
+
+async function generarAsync(){
+  const response = await fetch("http://172.16.238.10:5000/transactions/expenses/pdf", {
+      method: "GET",
+      credentials: "include",
+  });
+
+  if (!response.ok) {
+      alert("Error");
+      return;
+  }
+
+  const pdfBlob = await response.blob();
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+  window.open(pdfUrl, "_blank");
+}
+
 document.addEventListener("DOMContentLoaded", loadExpenses);

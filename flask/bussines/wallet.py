@@ -15,7 +15,7 @@ class Wallet:
 
     def get_wallet_id(self):
         return self.user_id
-        
+
     def insert_amount(self, amount, description, date, type_id, tag):
         current_tag = Tags.query.filter(Tags.tag_name==tag).scalar()
         new_tag = current_tag or Tags(tag_name=tag)
@@ -39,7 +39,7 @@ class Wallet:
         ).first()
         db.session.delete(transaction_to_delete)
         db.session.commit()
-    
+
 
     def response_data(self, current_amount):
         show_data = {}
@@ -120,5 +120,25 @@ class Wallet:
             return time_position[type_of_date](date, tag, type_id)
 
         return  time_position[type_of_date](date, tag, type_id)
-        
-    
+
+    def get_total_balance(self):
+        incomes = db.session.execute(
+            db.select(Transactions)
+            .filter(Transactions.user_id == self.user_id)
+            .filter(Transactions.type_id == 1)
+        ).all()
+        total_income = sum(income[0].amount for income in incomes)
+
+        expenses = db.session.execute(
+            db.select(Transactions)
+            .filter(Transactions.user_id == self.user_id)
+            .filter(Transactions.type_id == 2)
+        ).all()
+        total_expense = sum(expense[0].amount for expense in expenses)
+
+        balance = total_income - total_expense
+        return {
+                "income": total_income,
+                "expense": total_expense,
+                "balance": balance,
+            }

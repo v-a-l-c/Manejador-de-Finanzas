@@ -17,7 +17,7 @@ categorySelect.addEventListener("change", () => {
 });
 
 const addNewCategory = () => {
-    const newCategoryValue = newCategoryInput.value.trim(); 
+    const newCategoryValue = newCategoryInput.value.trim();
     if (newCategoryValue) {
         const newOption = document.createElement("option");
         newOption.value = newCategoryValue;
@@ -59,7 +59,7 @@ incomeForm.addEventListener("submit", async (event) =>{
         if (response.ok) {
             incomeForm.reset();
             loadIncomes();
-            showMessage("Nuevo ingreso añadido") 
+            showMessage("Nuevo ingreso añadido")
         }
     } catch(error){
         console.log(error);
@@ -242,6 +242,26 @@ async function searchTableAsync(user_input) {
     } catch (error) {
         console.error("Error en la solicitud:", error);
     }
+}
+
+function generarpdf(){
+  generarAsync();
+}
+
+async function generarAsync(){
+  const response = await fetch("http://172.16.238.10:5000/transactions/incomes/pdf", {
+      method: "GET",
+      credentials: "include",
+  });
+
+  if (!response.ok) {
+      alert("Error");
+      return;
+  }
+
+  const pdfBlob = await response.blob();
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+  window.open(pdfUrl, "_blank");
 }
 
 document.addEventListener("DOMContentLoaded", loadIncomes);

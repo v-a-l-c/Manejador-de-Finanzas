@@ -8,3 +8,4 @@ datetime
 pdfkit
 jinja2
 reportlab
+fpdf
