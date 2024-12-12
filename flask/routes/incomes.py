@@ -64,9 +64,9 @@ def generate_pdf():
     try:
         user_id = current_session.get('user_id')
         current_wallet = Wallet(user_id)
-        reporte = PDFreport(pdf_wallet)
+        reporte = PDFreport(current_wallet)
         reporte.generate_pdf()
-        return jsonify({"status": "success", "response": "success"}), 201
+        return jsonify({"status": "success", "data": "success"}), 201
 
     except Exception as e:
-        return jsonify({"message" : "server_not_process_data", "response" : str(e)}), 400
+        return jsonify({"status": "error", "message": str(e)}), 500

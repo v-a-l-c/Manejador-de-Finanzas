@@ -252,9 +252,6 @@ async function generarAsync(){
   const response = await fetch("http://172.16.238.10:5000/transactions/incomes/pdf", {
       method: "GET",
       credentials: "include",
-      /*headers: {
-          "Content-Type": "application/json"
-      }*/
   });
 
   if (!response.ok) {

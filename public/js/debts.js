@@ -323,4 +323,33 @@ async function searchTableAsync(user_input) {
     }
 }
 
+function generarpdf(){
+  generarAsync();
+}
+
+async function generarAsync(){
+  const response = await fetch("http://172.16.238.10:5000/transactions/expenses/pdf", {
+      method: "GET",
+      credentials: "include",
+  });
+
+  if (!response.ok) {
+      alert("Error");
+      return;
+  }
+
+  try {
+      const jsonResponse = await response.json();
+
+      if (jsonResponse.response === "success") {
+          console.log("Success");
+      } else {
+          console.error("Hubo un error:", jsonResponse.response);
+      }
+
+  } catch (error) {
+      console.error("Error en la solicitud:", error);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", loadExpenses);

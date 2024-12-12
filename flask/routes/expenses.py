@@ -192,7 +192,7 @@ def get_all_expensesperiod():
         expenses = graph.get_all_expenses_period(timespan)
         return jsonify({"status": "success", "data": expenses}), 200
     except Exception as e:
-        print(f"Error interno: {e}")  
+        print(f"Error interno: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @expenses_bp.route('/expenses/search', methods=['GET'])
@@ -218,3 +218,15 @@ def delete_transaction():
 
     except Exception as e:
         return jsonify({"message" : "server_not_process_data", "response" : str(e)}), 400
+
+@expenses_bp.route('/expenses/pdf', methods=['GET'])
+def generate_pdf():
+    try:
+        user_id = current_session.get('user_id')
+        current_wallet = Wallet(user_id)
+        reporte = PDFreport(current_wallet)
+        reporte.generate_pdf()
+        return jsonify({"status": "success", "data": "success"}), 201
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
