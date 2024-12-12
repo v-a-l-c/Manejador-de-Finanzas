@@ -1,4 +1,4 @@
-from flask import request, Blueprint, jsonify
+from flask import request, Blueprint, jsonify, Response
 from routes.sessions import current_session
 from bussines.wallet import Wallet
 from bussines.pdf_report import PDFreport
@@ -65,8 +65,10 @@ def generate_pdf():
         user_id = current_session.get('user_id')
         current_wallet = Wallet(user_id)
         reporte = PDFreport(current_wallet)
-        reporte.generate_pdf()
-        return jsonify({"status": "success", "data": "success"}), 201
+        pdf_output = reporte.output(dest='S').encode('latin1')
+        return Response(pdf_output, mimetype='application/pdf', headers={
+            "Content-Disposition": "inline; filename=report.pdf"
+        })
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500

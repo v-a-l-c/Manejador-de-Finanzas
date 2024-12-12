@@ -259,18 +259,9 @@ async function generarAsync(){
       return;
   }
 
-  try {
-      const jsonResponse = await response.json();
-
-      if (jsonResponse.response === "success") {
-          console.log("Success");
-      } else {
-          console.error("Hubo un error:", jsonResponse.response);
-      }
-
-  } catch (error) {
-      console.error("Error en la solicitud:", error);
-  }
+  const pdfBlob = await response.blob();
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+  window.open(pdfUrl, "_blank");
 }
 
 document.addEventListener("DOMContentLoaded", loadIncomes);

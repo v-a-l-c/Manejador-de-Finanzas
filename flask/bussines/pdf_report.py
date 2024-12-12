@@ -4,10 +4,8 @@ from bussines.wallet import Wallet
 
 class PDFreport(FPDF):
 
-    current_wallet = None
-
     def __init__(self, wallet):
-        #current_wallet = wallet
+        self.current_wallet = wallet
         super().__init__(orientation='P', unit='mm', format='A4')
         self.add_page()
         self.table_incomes()
@@ -27,7 +25,7 @@ class PDFreport(FPDF):
     #incomes table
     def table_incomes(self):
         self.ln(10)
-        #data = current_wallet.get_all_transactions(0)
+        data = self.current_wallet.get_all_transactions(1)
         self.set_font('Times', '', 12)
         self.cell(0, 10, 'Ingresos:', 0, 1, 'L')
         self.ln(5)
@@ -37,19 +35,18 @@ class PDFreport(FPDF):
         self.cell(40, 10, 'Fecha', 1, 0, 'C')
         self.cell(40, 10, 'Descripción', 1, 1, 'C')
         self.set_font('Times', '', 12)
-        """
         if not data:
             self.cell(0, 10, 'No hay ingresos registrados.', 1, 1, 'C')
             return
         for income in data:
+            date_str = income["date"].strftime('%Y-%m-%d')
             self.cell(40, 10, income["category"], 1, 0, 'C')
             self.cell(40, 10, f'${income["amount"]}', 1, 0, 'R')
-            self.cell(40, 10, income["date"], 1, 0, 'C')
+            self.cell(40, 10, date_str, 1, 0, 'C')
             self.multi_cell(40, 10, income["description"], 1)
-            """
     #expenses table
     def table_expenses(self):
-        #data = current_wallet.get_all_transactions(1)
+        data = self.current_wallet.get_all_transactions(2)
         self.ln(5)
         self.set_font('Times', '', 12)
         self.cell(0, 10, 'Egresos:', 0, 1, 'L')
@@ -60,16 +57,15 @@ class PDFreport(FPDF):
         self.cell(40, 10, 'Fecha', 1, 0, 'C')
         self.cell(40, 10, 'Descripción', 1, 1, 'C')
         self.set_font('Times', '', 12)
-        """
         if not data:
-            self.cell(0, 10, 'No hay egresos registrados.', 1, 1, 'C')
+            self.cell(0, 10, 'No hay ingresos registrados.', 1, 1, 'C')
             return
         for income in data:
+            date_str = income["date"].strftime('%Y-%m-%d')
             self.cell(40, 10, income["category"], 1, 0, 'C')
             self.cell(40, 10, f'${income["amount"]}', 1, 0, 'R')
-            self.cell(40, 10, income["date"], 1, 0, 'C')
+            self.cell(40, 10, date_str, 1, 0, 'C')
             self.multi_cell(40, 10, income["description"], 1)
-        """
 
     #balance table
     def balance_content(self):
