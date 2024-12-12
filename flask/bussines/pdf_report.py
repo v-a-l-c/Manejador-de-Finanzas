@@ -58,7 +58,7 @@ class PDFreport(FPDF):
         self.cell(40, 10, 'Descripción', 1, 1, 'C')
         self.set_font('Times', '', 12)
         if not data:
-            self.cell(0, 10, 'No hay ingresos registrados.', 1, 1, 'C')
+            self.cell(0, 10, 'No hay egresos registrados.', 1, 1, 'C')
             return
         for income in data:
             date_str = income["date"].strftime('%Y-%m-%d')
@@ -69,6 +69,7 @@ class PDFreport(FPDF):
 
     #balance table
     def balance_content(self):
+        data = self.current_wallet.get_total_balance()
         self.ln(10)
         self.set_font('Times', '', 12)
         self.cell(0, 10, 'Balance General:', 0, 1, 'L')
@@ -77,13 +78,15 @@ class PDFreport(FPDF):
         self.cell(50, 10, 'Descripción', 1, 0, 'C')
         self.cell(50, 10, 'Monto', 1, 1, 'C')
         self.set_font('Times', '', 12)
+        if not data:
+            self.cell(0, 10, 'No hay registros.', 1, 1, 'C')
+            return
         self.cell(50, 10, 'Ingresos Totales', 1, 0, 'L')
-        self.cell(50, 10, '$1000.00', 1, 1, 'R')
+        self.cell(50, 10, f'${data["income"]}', 1, 1, 'R')
         self.cell(50, 10, 'Egresos Totales', 1, 0, 'L')
-        self.cell(50, 10, '$500.00', 1, 1, 'R')
+        self.cell(50, 10, f'${data["expense"]}', 1, 1, 'R')
         self.cell(50, 10, 'Balance Final', 1, 0, 'L')
-        self.cell(50, 10, '$500.00', 1, 1, 'R')
-        pass
+        self.cell(50, 10, f'${data["balance"]}', 1, 1, 'R')
 
     def generate_pdf(self):
         self.output('report.pdf', 'I')
