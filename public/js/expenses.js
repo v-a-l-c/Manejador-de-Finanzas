@@ -287,6 +287,7 @@ async function searchTableAsync(user_input) {
         if (jsonResponse.message === "transaction_search_returned") {
           const resourceArray = Object.values(jsonResponse.resource).map(item => {
             return {
+                id: item.total || null,
                 total: item.total || null,
                 amount: item.amount || null,
                 category: item.category || null,

@@ -214,7 +214,7 @@ function deleteExpense(expenseId) {
 }
 
 async function deleteIncomeAsync(expenseId) {
-  const response = await fetch("http://172.16.238.10:5000/transactions/expenses/delete", {
+  const response = await fetch("http://172.16.238.10:5000/transactions/debt/delete", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -274,7 +274,7 @@ async function searchTableAsync(user_input) {
       alert("Error en la búsqueda. Formato: date: xx-xx-xx (&d, &m, &y), tag:xxxx");
       return;
     }
-    const response = await fetch("http://172.16.238.10:5000/transactions/expenses/search", {
+    const response = await fetch("http://172.16.238.10:5000/transactions/debt/search", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -291,7 +291,7 @@ async function searchTableAsync(user_input) {
 
     try {
         const jsonResponse = await response.json();
-
+        console.log(jsonResponse)
         if (jsonResponse.message === "transaction_search_returned") {
           const resourceArray = Object.values(jsonResponse.resource).map(item => {
             return {

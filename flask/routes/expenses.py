@@ -169,8 +169,8 @@ def get_expense_per_year_aot():
 @expenses_bp.route("/expenses/allexpenses", methods=["GET"])
 def get_all_expenses():
     user_id = current_session.get('user_id')
-    #if not user_id:
-    #    return jsonify({"status": "error", "message": "No autenticado"}), 401
+    if not user_id:
+        return jsonify({"status": "error", "message": "No autenticado"}), 401
 
     wallet = Wallet(1)
 

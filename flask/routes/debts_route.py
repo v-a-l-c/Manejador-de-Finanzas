@@ -2,7 +2,7 @@ from flask import request, Blueprint, jsonify
 from routes.sessions import current_session
 from bussines.wallet import Wallet
 from bussines.debt_account import DebtAccount
-
+from bussines.pdf_report import PDFreport
 
 debt = Blueprint('debt', __name__)
 
@@ -67,3 +67,18 @@ def remind_record_debt():
         return jsonify({"message": "server_sent_record", "resource": debt_account.date_status(data_json['id'])}), 201
     except Exception as e:
         return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
+
+
+@debt.route('/debt/delete', methods=['DELETE'])
+def delete_transaction():
+    try:
+        user_id  = current_session.get('user_id')
+        if not user_id:
+          return jsonify({"status": "error", "message": "No autenticado"}), 401
+        data_json = request.get_json()
+        debt_account = get_current_debtAcc()  
+        debt_account.pop_debt(data_json['id'])
+        return jsonify({"message": "transaction_deleted_successfully", "response": "success"}), 201
+
+    except Exception as e:
+        return jsonify({"message" : "server_not_process_data", "response" : str(e)}), 400
