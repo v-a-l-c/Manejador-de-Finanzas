@@ -16,6 +16,6 @@ Una vez instalado y condigurado docker, situares en la carpeta principal `Maneja
   - 3.- Podra visualizar la interfaz de inicio, hacer el proceso de registro.
   - 4.- Si requiere cerrar la aplicacion, en la terminal donde se encuentra corriendo la aplicacion presionar Ctrl-c.
   - 5.- Si requiere levantar la aplicacion solo necesita ejecutar `docker compose up` o bien `docker-compose up`.
-  
+  - 6.- Para hacer una busqueda, asegurate de usar &day, &week, &month, &year en la bandera cuando ingreses la fecha en el campo "date". 
 
 
