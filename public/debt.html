@@ -28,7 +28,7 @@
         <!-- Contenido principal -->
         <div class="main-content">
             <a href="index.html" class="logout">Cerrar sesión</a>
-            <h1 class="dashboard-title">Egresos</h1>
+            <h1 class="dashboard-title">Deudas</h1>
 
             <!-- Contenedor de la tabla y el menú -->
             <div class="table-menu-container">
@@ -48,13 +48,15 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Descripción</th>
+                                <th>Prestamista</th>
                                 <th>Cantidad</th>
+                                <th>Interes</th>
                                 <th>Fecha</th>
                                 <th>Rubro</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="expense-table-body">
+                        <tbody id="debt-table-body">
                             <!-- Filas dinámicas -->
                         </tbody>
                     </table>
@@ -77,7 +79,7 @@
                         <input type="number" id="amount" required min="0">
 
                         <label for="interest">Interes mensual</label>
-                        <input type="number" id="interest" required min="0">
+                        <input type="number" id="interest" step="0.01" min="0" max="1">
 
                         <label for="date">Fecha</label>
                         <!-- Fecha con restricción de rango -->

@@ -129,19 +129,20 @@ class DebtAccount:
 
     def get_all_debts(self, type_id):
         current_transactions = db.session.execute(
-            db.select(Debts, Transactions.amount, Transactions.description, Transactions.date, Tags.tag_name)
+            db.select(Debts, Transactions.amount, Interests.percent, Transactions.description, Transactions.date, Tags.tag_name)
             .filter(Transactions.user_id == self.wallet.get_wallet_id())
-            .filter(Transactions.type_id == type_id).join(Transactions, Debts.transaction_id == Transactions.id).join(Tags, Transactions.tag_id == Tags.id)
+            .filter(Transactions.type_id == type_id).join(Transactions, Debts.transaction_id == Transactions.id).join(Tags, Transactions.tag_id == Tags.id).join(Interests, Debts.interest_id == Interests.id)
         ).all()
 
         return [
             {
                 "amount": amount,
+                "interest":percent,
                 "description": description,
                 "category": tag_name,
                 "creditor": debt.creditor,
                 "date":date,
                 "id": debt.id,
             }
-            for debt, amount, description, date, tag_name in current_transactions
+            for debt, amount, percent, description, date, tag_name in current_transactions
         ]

@@ -18,8 +18,8 @@ def register_debt():
         debt_account = get_current_debtAcc()
         debt_account.register_debt(
             data_json['creditor'], data_json['amount'], data_json['description'], 
-            data_json['date'], 3, data_json['tag'], data_json['interest'])
-        return jsonify({"message": "success_debt_saved", "response": "succcess"}), 201
+            data_json['date'], 3, data_json['category'], data_json['interest'])
+        return jsonify({"message": "success_debt_saved", "response": "success"}), 201
     except Exception as e:
         return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
 
@@ -52,7 +52,7 @@ def get_all_debts():
         if not user_id:
             return jsonify({"status": "error", "message": "No autenticado"}), 401
         debt_account = get_current_debtAcc()
-        return jsonify({"message": "success_debts_returned", "resource": debt_account.get_all_debts(3)}), 201
+        return jsonify({"status": "success", "resource": debt_account.get_all_debts(3)}), 201
     except Exception as e:
         return jsonify({"message": "server_not_process_data", "response": str(e)}), 500
 

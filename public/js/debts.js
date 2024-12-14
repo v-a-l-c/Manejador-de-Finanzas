@@ -30,19 +30,19 @@ async function handleFormSubmit(event) {
     const interest = document.getElementById('interest').value;
 
     if (isEditing) {
-        tableData[editingIndex] = { description, amount, date, category };
+        tableData[editingIndex] = { description, amount, date, category, creditor, interest};
         showMessage("Modificado exitosamente");
         renderTable();
         resetForm();
     } else {
-        const expenseData = { description, amount, date, category, creditor, interest};
-
+        const debtData = { description, amount, date, category, creditor, interest};
+        console.log(debtData);
         try {
             const response = await fetch("http://172.16.238.10:5000/transactions/debt", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
-                body: JSON.stringify(expenseData),
+                body: JSON.stringify(debtData)
             });
 
             const data = await response.json();
@@ -101,6 +101,8 @@ function editRow(index) {
     document.getElementById("amount").value = data.amount;
     document.getElementById("date").value = data.date;
     document.getElementById("category").value = data.category;
+    document.getElementById("interest").value = data.category;
+    document.getElementById("creditor").value = data.category;
 
     isEditing = true;
     editingIndex = index;
@@ -143,7 +145,7 @@ document.getElementById("category").addEventListener("change", function () {
 
 
 async function loadExpenses() {
-    const response = await fetch("http://172.16.238.10:5000/transactions/expenses/allexpenses", {
+    const response = await fetch("http://172.16.238.10:5000/transactions/debt/all-debts", {
         method: "GET",
         credentials: "include"
     });
@@ -156,10 +158,10 @@ async function loadExpenses() {
 
     try {
         const jsonResponse = await response.json();
-
-        if (jsonResponse.status === "success" && Array.isArray(jsonResponse.data)) {
-            const expenses = jsonResponse.data;
-            populateExpensesTable(expenses);
+        console.log(jsonResponse);
+        if (jsonResponse.status === "success" && Array.isArray(jsonResponse.resource)) {
+            const debts = jsonResponse.resource;
+            populateExpensesTable(debts);
         } else {
             console.error("No se encontraron gastos o hubo un error:", jsonResponse.message);
         }
@@ -168,8 +170,8 @@ async function loadExpenses() {
     }
 }
 
-function populateExpensesTable(expenses) {
-    const dataTableBody = document.getElementById("expense-table-body");
+function populateExpensesTable(debts) {
+    const dataTableBody = document.getElementById("debt-table-body");
     if (!dataTableBody) {
         console.error("El elemento de la tabla no se encuentra.");
         return;
@@ -177,18 +179,20 @@ function populateExpensesTable(expenses) {
 
     dataTableBody.innerHTML = "";
 
-    expenses.forEach((expense) => {
+    debts.forEach((debt) => {
         const row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${expense.id}</td>
-            <td>${expense.description}</td>
-            <td>${expense.amount}</td>
-            <td>${expense.date}</td>
-            <td>${expense.category || "Sin rubro"}</td>
+            <td>${debt.id}</td>
+            <td>${debt.description}</td>
+            <td>${debt.creditor}</td>
+            <td>${debt.amount}</td>
+            <td>${debt.interest  || "Sin interes"}</td>
+            <td>${debt.date}</td>
+            <td>${debt.category || "Sin rubro"}</td>
             <td>
-                <button onclick="editExpense(${expense.id})">Editar</button>
-                <button onclick="deleteExpense(${expense.id})">Eliminar</button>
+                <button onclick="editExpense(${debt.id})">Editar</button>
+                <button onclick="deleteExpense(${debt.id})">Eliminar</button>
             </td>
         `;
 
