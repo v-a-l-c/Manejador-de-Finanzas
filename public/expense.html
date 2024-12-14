@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MonKey - Deudas</title>
+    <title>MonKey - Gastos</title>
     <link rel="stylesheet" href="css/debts.css">
 </head>
 
@@ -18,7 +18,8 @@
                     <li><a href="history.html">Historial</a></li>
                     <li><a href="income.html">Ingresos</a></li>
                     <li><a href="transaction.html">Transacciones</a></li>
-                    <li><a href="debts.html" class="active">Egresos</a></li>
+                    <li><a href="expense.html" class="active">Egresos</a></li>
+                    <li><a href="debt.html" class="active">Deudas</a></li>
                 </ul>
             </nav>
             <a href="settings.html" class="settings">Configuración</a>
@@ -46,8 +47,10 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Prestamista</th>
                                 <th>Descripción</th>
                                 <th>Cantidad</th>
+                                <th>Interes</th>
                                 <th>Fecha</th>
                                 <th>Rubro</th>
                                 <th>Acciones</th>
@@ -102,7 +105,7 @@
     </div>
 
     <!-- Archivo JavaScript -->
-    <script src="js/debts.js"></script>
+    <script src="js/expenses.js"></script>
 </body>
 
 </html>

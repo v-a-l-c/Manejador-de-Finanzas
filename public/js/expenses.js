@@ -26,8 +26,6 @@ async function handleFormSubmit(event) {
     const amount = parseFloat(document.getElementById("amount").value).toFixed(2); // Convertir cantidad a formato decimal
     const date = document.getElementById("date").value;
     const category = document.getElementById("category").value;
-    const creditor = document.getElementById('creditor').value;
-    const interest = document.getElementById('interest').value;
 
     if (isEditing) {
         tableData[editingIndex] = { description, amount, date, category };
@@ -35,10 +33,10 @@ async function handleFormSubmit(event) {
         renderTable();
         resetForm();
     } else {
-        const expenseData = { description, amount, date, category, creditor, interest};
+        const expenseData = { description, amount, date, category };
 
         try {
-            const response = await fetch("http://172.16.238.10:5000/transactions/debt", {
+            const response = await fetch("http://172.16.238.10:5000/transactions/expenses/add", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -48,7 +46,7 @@ async function handleFormSubmit(event) {
             const data = await response.json();
 
             if (response.ok) {
-                console.log("Deuda añadido:", data);
+                console.log("Gasto añadido:", data);
                 showMessage("Añadido exitosamente");
                 loadExpenses();
                 resetForm();
@@ -83,9 +81,7 @@ function renderTable() {
         row.innerHTML = `
             <td>${index + 1}</td>
             <td>${data.description}</td>
-            <td>${data.creditor}</td>
             <td>$${data.amount}</td> <!-- Mostrar cantidad con símbolo de dólar -->
-            <td>${data.interest}</td>
             <td>${data.date}</td>
             <td>${data.category}</td>
             <td><button onclick="editRow(${index})">Modificar</button></td>

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MonKey - Ingresos</title>
+    <title>MonKey - Deudas</title>
     <link rel="stylesheet" href="css/debts.css">
 </head>
 
@@ -15,9 +16,9 @@
             <nav>
                 <ul>
                     <li><a href="history.html">Historial</a></li>
-                    <li><a href="income.html" class="active">Ingresos</a></li>
+                    <li><a href="income.html">Ingresos</a></li>
                     <li><a href="transaction.html">Transacciones</a></li>
-                    <li><a href="expense.html">Egresos</a></li>
+                    <li><a href="expense.html" class="active">Egresos</a></li>
                     <li><a href="debt.html" class="active">Deudas</a></li>
                 </ul>
             </nav>
@@ -27,20 +28,21 @@
         <!-- Contenido principal -->
         <div class="main-content">
             <a href="index.html" class="logout">Cerrar sesión</a>
-            <h1 class="dashboard-title">Ingresos</h1>
+            <h1 class="dashboard-title">Egresos</h1>
 
             <!-- Contenedor de la tabla y el menú -->
             <div class="table-menu-container">
                 <!-- Contenedor de la tabla -->
                 <div class="table-container">
                     <div class="search-bar">
+                        <!-- Botón para limpiar la búsqueda y restablecer la tabla -->
+                        <button onclick="clearSearch()">Limpiar</button>
                         <!-- Barra de búsqueda -->
                         <input type="text" id="searchInput" placeholder="date: xx-xx-xx (&d, &m, &y), tag:xxxx">
                         <button onclick="searchTable()">Buscar</button>
                         <button onclick="generarpdf()">Descarga PDF</button>
                     </div>
 
-                    <!-- Tabla de ingresos -->
                     <table id="dataTable">
                         <thead>
                             <tr>
@@ -52,7 +54,7 @@
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="data-table-body">
+                        <tbody id="expense-table-body">
                             <!-- Filas dinámicas -->
                         </tbody>
                     </table>
@@ -64,12 +66,18 @@
                 <!-- Menú de acciones -->
                 <div class="menu">
                     <h2 id="menuTitle">Añadir/Modificar</h2>
-                    <form id="actionForm">
+                    <form id="actionForm" onsubmit="handleFormSubmit(event)">
                         <label for="description">Descripción</label>
                         <input type="text" id="description" required>
 
+                        <label for="creditor">Prestamista</label>
+                        <input type="text" id="creditor" required>
+
                         <label for="amount">Cantidad</label>
                         <input type="number" id="amount" required min="0">
+
+                        <label for="interest">Interes mensual</label>
+                        <input type="number" id="interest" required min="0">
 
                         <label for="date">Fecha</label>
                         <!-- Fecha con restricción de rango -->
@@ -84,9 +92,9 @@
                         </select>
 
                         <!-- Contenedor para añadir un nuevo rubro, oculto por defecto -->
-                        <div id="newCategoryContainer" style="display: none">
+                        <div id="newCategoryContainer" style="display: none;">
                             <input type="text" id="newCategory" placeholder="Nuevo rubro">
-                            <button type = "button" id = "addCategory"  onclick="addNewCategory()" >Añadir Rubro</button>
+                            <button type="button" onclick="addNewCategory()">Añadir Rubro</button>
                         </div>
 
                         <button type="submit" id="addButton">Agregar</button>
@@ -101,6 +109,7 @@
     </div>
 
     <!-- Archivo JavaScript -->
-    <script src="js/income.js"></script>
+    <script src="js/debts.js"></script>
 </body>
+
 </html>
